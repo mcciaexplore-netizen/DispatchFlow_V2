@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+ocr-frontend/node_modules/
+
+# Build outputs
+dist/
+build/
+ocr-frontend/dist/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+ocr-backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# PaddleOCR model cache
+~/.paddleocr/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Claude Code
+.claude/
