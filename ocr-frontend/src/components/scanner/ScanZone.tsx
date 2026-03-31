@@ -53,20 +53,17 @@ export function ScanZone({ fields, onResult }: Props) {
         video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } },
       })
       streamRef.current = stream
-      setMode('camera')  // render <video> first, then attach in useEffect
+      // videoRef is always mounted (hidden), so we can attach immediately
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        await videoRef.current.play()
+      }
+      setMode('camera')
       setStatus('')
     } catch {
       setStatus('Camera access denied. Please use file upload instead.')
     }
   }, [])
-
-  // Attach stream once the <video> element is in the DOM
-  useEffect(() => {
-    if (mode === 'camera' && videoRef.current && streamRef.current) {
-      videoRef.current.srcObject = streamRef.current
-      videoRef.current.play().catch(() => {})
-    }
-  }, [mode])
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach(t => t.stop())
@@ -188,9 +185,15 @@ export function ScanZone({ fields, onResult }: Props) {
           </div>
         )}
 
-        {mode === 'camera' && (
-          <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" style={{ minHeight: 220 }} />
-        )}
+        {/* Always mounted so videoRef is available before startCamera is called */}
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="w-full h-full object-cover"
+          style={{ minHeight: 220, display: mode === 'camera' ? 'block' : 'none' }}
+        />
 
         {mode === 'preview' && preview && (
           <img src={preview} alt="scan" className="w-full object-contain" style={{ maxHeight: 300 }} />
