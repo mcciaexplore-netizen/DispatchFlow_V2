@@ -8,6 +8,7 @@ import { Badge } from '../components/ui/Badge'
 import { saveSchema, getSchema } from '../lib/schema'
 import { savePin, verifyPin } from '../lib/pinAuth'
 import { exportBackup, importBackup, runRetentionSweep } from '../lib/backup'
+import { exportSettings, importSettings } from '../lib/settingsExport'
 import { forceSyncNow } from '../lib/syncWorker'
 import { LS } from '../constants/storage'
 import { db } from '../db'
@@ -88,6 +89,11 @@ export function Settings() {
   const [importMsg, setImportMsg] = useState('')
   const [syncing,   setSyncing]   = useState(false)
   const [exporting, setExporting] = useState(false)
+
+  // ── Settings transfer ──────────────────────────────────────────────────
+  const settingsImportRef = useRef<HTMLInputElement>(null)
+  const [settingsImporting, setSettingsImporting] = useState(false)
+  const [settingsMsg, setSettingsMsg] = useState('')
 
   // ── Save helpers ─────────────────────────────────────────────────────
   const saveCompany = () => {
@@ -191,6 +197,23 @@ export function Settings() {
     const reader = new FileReader()
     reader.onload = ev => setLogoFile(ev.target?.result as string)
     reader.readAsDataURL(file)
+  }
+
+  const handleSettingsImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setSettingsImporting(true)
+    setSettingsMsg('')
+    try {
+      await importSettings(file)
+      setSettingsMsg('Settings imported. Reloading…')
+      setTimeout(() => window.location.replace('/'), 1000)
+    } catch (err) {
+      setSettingsMsg(`Import failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } finally {
+      setSettingsImporting(false)
+      e.target.value = ''
+    }
   }
 
   return (
@@ -323,6 +346,28 @@ export function Settings() {
           {pinMsg && <p className={`text-sm mt-1 ${pinMsg.includes('success') ? 'text-success' : 'text-danger'}`}>{pinMsg}</p>}
           <Button variant="secondary" size="md" onClick={handlePinChange} className="mt-2">Update PIN</Button>
         </div>
+      </Section>
+
+      <Divider />
+
+      {/* ── Settings transfer ── */}
+      <Section title="Settings transfer">
+        <p className="text-sm text-muted">
+          Export your configuration (API keys, schemas, company info) as a JSON file to quickly set up this app on another device in the same organisation.
+          The admin PIN is included in the export — keep the file secure.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="secondary" size="md" onClick={exportSettings}>
+            ↓ Export settings
+          </Button>
+          <Button variant="secondary" size="md" onClick={() => settingsImportRef.current?.click()} loading={settingsImporting}>
+            ↑ Import settings
+          </Button>
+          <input ref={settingsImportRef} type="file" accept=".json" className="sr-only" onChange={handleSettingsImport} />
+        </div>
+        {settingsMsg && (
+          <p className={`text-sm ${settingsMsg.includes('failed') ? 'text-danger' : 'text-success'}`}>{settingsMsg}</p>
+        )}
       </Section>
 
       <Divider />

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { TEMPLATES, type TemplateId } from '../constants/schemaTemplates'
 import { SchemaEditor } from '../components/schema/SchemaEditor'
 import { saveSchema } from '../lib/schema'
@@ -8,6 +8,7 @@ import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { Card } from '../components/ui/Card'
 import { getApiConfig } from '../lib/config'
+import { importSettings } from '../lib/settingsExport'
 import type { SchemaField, CompanyConfig, ApiConfig, SessionConfig, BackupConfig } from '../types'
 
 const TOTAL_STEPS = 4
@@ -320,6 +321,24 @@ function Step4({ onNext, onBack }: {
 // ── Main Wizard ───────────────────────────────────────────────────────────
 export function OnboardingWizard() {
   const [step, setStep]   = useState(1)
+  const settingsFileRef   = useRef<HTMLInputElement>(null)
+  const [settingsImporting, setSettingsImporting] = useState(false)
+  const [settingsError, setSettingsError]         = useState('')
+
+  const handleSettingsImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setSettingsImporting(true)
+    setSettingsError('')
+    try {
+      await importSettings(file)
+      window.location.replace('/')
+    } catch (err) {
+      setSettingsError(err instanceof Error ? err.message : 'Import failed')
+      setSettingsImporting(false)
+      e.target.value = ''
+    }
+  }
 
   // Accumulated state
   const [, setCompany]   = useState<CompanyConfig | null>(null)
@@ -382,6 +401,20 @@ export function OnboardingWizard() {
             <span className="text-xl font-heading text-primary tracking-tight">DispatchFlow</span>
           </div>
           <p className="text-sm text-muted">Let's set up your account. Takes about 2 minutes.</p>
+        </div>
+
+        {/* Import settings from another device */}
+        <div className="mb-6 flex flex-col items-center gap-2">
+          <div className="flex items-center gap-3 w-full">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-xs text-muted whitespace-nowrap">Already set up on another device?</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+          <Button variant="secondary" size="sm" onClick={() => settingsFileRef.current?.click()} loading={settingsImporting}>
+            Import settings from file
+          </Button>
+          <input ref={settingsFileRef} type="file" accept=".json" className="sr-only" onChange={handleSettingsImport} />
+          {settingsError && <p className="text-xs text-danger">{settingsError}</p>}
         </div>
 
         <StepBar current={step} />
