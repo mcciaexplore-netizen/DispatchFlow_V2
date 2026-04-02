@@ -284,13 +284,32 @@
     }
     .ss-grid .ss-img img { max-height: 340px; object-fit: cover; object-position: top; }
 
-    /* PRINT */
+    /* PRINT / SAVE AS PDF */
     @media print {
-      .cover { page-break-after: always; }
-      section { page-break-inside: avoid; }
-      .ch { page-break-after: avoid; }
-      body { font-size: 14px; }
-      .ss-img img { max-height: 320px; }
+      @page          { margin: 18mm 16mm; size: A4; }
+      @page :first   { margin: 0; }
+
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+      body   { font-size: 13px; background: #F5F2ED !important; }
+
+      .cover {
+        page-break-after: always;
+        min-height: 100vh;
+        margin: 0; padding: 60px 40px;
+      }
+
+      section      { page-break-inside: avoid; margin-bottom: 32px; }
+      .ch          { page-break-after: avoid; }
+      hr           { page-break-after: avoid; }
+      h3           { page-break-after: avoid; }
+      .big-step    { page-break-inside: avoid; }
+
+      .ss-img img        { max-height: 280px; }
+      .ss-grid .ss-img img { max-height: 220px; }
+      .ss-2col           { gap: 10px; }
+
+      .toc-list a  { color: var(--text) !important; text-decoration: none; }
     }
 
     @media (max-width: 600px) {
