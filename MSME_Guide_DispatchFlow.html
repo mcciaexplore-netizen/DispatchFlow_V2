@@ -286,30 +286,76 @@
 
     /* PRINT / SAVE AS PDF */
     @media print {
-      @page          { margin: 18mm 16mm; size: A4; }
-      @page :first   { margin: 0; }
+      @page        { margin: 18mm 16mm; size: A4; }
+      @page :first { margin: 0; }
 
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      /* Force all backgrounds & colors to print */
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
 
-      body   { font-size: 13px; background: #F5F2ED !important; }
+      body { font-size: 13px; background: #F5F2ED !important; }
 
+      /* Cover — explicit hex so CSS vars resolve correctly in print */
       .cover {
         page-break-after: always;
         min-height: 100vh;
         margin: 0; padding: 60px 40px;
+        background: #2C2824 !important;
+        color: #ffffff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
+      .cover .tagline { color: #E07B00 !important; }
+      .cover .sub,
+      .cover .desc,
+      .cover-strip   { color: rgba(255,255,255,0.6) !important; }
 
-      section      { page-break-inside: avoid; margin-bottom: 32px; }
-      .ch          { page-break-after: avoid; }
-      hr           { page-break-after: avoid; }
-      h3           { page-break-after: avoid; }
-      .big-step    { page-break-inside: avoid; }
+      /* Chapter headers */
+      .ch {
+        background: #2C2824 !important;
+        color: #ffffff !important;
+        page-break-after: avoid;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .ch p { color: rgba(255,255,255,0.6) !important; }
 
-      .ss-img img        { max-height: 280px; }
+      /* Callout boxes — use explicit backgrounds */
+      .box-tip    { background: #eef8f3 !important; border-left-color: #2D7A4F !important; }
+      .box-warn   { background: #fef8ec !important; border-left-color: #B8710A !important; }
+      .box-info   { background: #eef4fc !important; border-left-color: #1A5E96 !important; }
+      .box-danger { background: #fdf0f0 !important; border-left-color: #B83232 !important; }
+
+      /* Step numbers */
+      .sn  { background: #E07B00 !important; color: #ffffff !important; }
+      .bsn { background: #2C2824 !important; color: #ffffff !important; }
+
+      /* Badges */
+      .b-must { background: #fde8e8 !important; color: #B83232 !important; }
+      .b-opt  { background: #e8f5ee !important; color: #2D7A4F !important; }
+      .b-free { background: #e8effe !important; color: #1A5E96 !important; }
+
+      /* Table header */
+      thead { background: #2C2824 !important; color: #ffffff !important; }
+
+      /* Accent text */
+      .toc-group-title { color: #E07B00 !important; }
+      h3 { border-left-color: #E07B00 !important; page-break-after: avoid; }
+
+      /* Page breaks */
+      section   { page-break-inside: avoid; margin-bottom: 32px; }
+      hr        { page-break-after: avoid; }
+      .big-step { page-break-inside: avoid; }
+
+      /* Image sizing */
+      .ss-img img          { max-height: 280px; }
       .ss-grid .ss-img img { max-height: 220px; }
-      .ss-2col           { gap: 10px; }
+      .ss-2col             { gap: 10px; }
 
-      .toc-list a  { color: var(--text) !important; text-decoration: none; }
+      /* TOC links — no blue underline in PDF */
+      .toc-list a { color: #1E1B17 !important; text-decoration: none; }
     }
 
     @media (max-width: 600px) {
