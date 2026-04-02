@@ -11,6 +11,7 @@ import { DispatchDetail } from './pages/DispatchDetail'
 import { InvoiceHistory } from './pages/InvoiceHistory'
 import { InvoiceDetail }  from './pages/InvoiceDetail'
 import { Settings }       from './pages/Settings'
+import { RefDocs }        from './pages/RefDocs'
 
 // ── Error Boundary ────────────────────────────────────────────────────────
 interface EBState { hasError: boolean; error: Error | null }
@@ -99,6 +100,7 @@ export default function App() {
             <Route path="/invoices/history"              element={<InvoiceHistory />} />
             <Route path="/invoices/history/:invoiceId"   element={<InvoiceDetail />} />
             <Route path="/settings"                      element={<Settings />} />
+            <Route path="/refdocs"                       element={<RefDocs />} />
             <Route path="*"                              element={<NotFound />} />
           </Route>
         </Routes>

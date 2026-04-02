@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DispatchFlow — Simple Guide for Business Owners</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F5F2ED;
+      --surface: #FDFCF9;
+      --border: #E0D9CE;
+      --text: #1E1B17;
+      --muted: #706A62;
+      --primary: #2C2824;
+      --accent: #E07B00;
+      --success: #2D7A4F;
+      --warning: #B8710A;
+      --danger: #B83232;
+      --info: #1A5E96;
+      --radius: 10px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    /* COVER */
+    .cover {
+      min-height: 100vh;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 40px;
+      page-break-after: always;
+    }
+    .cover-icon { font-size: 72px; margin-bottom: 28px; }
+    .cover h1 { font-size: 52px; font-weight: 900; letter-spacing: -1px; margin-bottom: 6px; }
+    .cover .sub { font-size: 18px; color: rgba(255,255,255,0.55); margin-bottom: 28px; }
+    .cover .tagline {
+      font-size: 24px; color: var(--accent); font-weight: 700;
+      margin-bottom: 20px; max-width: 580px; line-height: 1.4;
+    }
+    .cover .desc {
+      font-size: 16px; color: rgba(255,255,255,0.65);
+      max-width: 520px; line-height: 1.8;
+    }
+    .cover-strip {
+      margin-top: 56px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 24px;
+      display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;
+      font-size: 13px; color: rgba(255,255,255,0.38);
+    }
+
+    /* LAYOUT */
+    .page { max-width: 860px; margin: 0 auto; padding: 52px 32px; }
+
+    /* CHAPTER HEADER */
+    .ch {
+      background: var(--primary);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 26px 32px;
+      margin-bottom: 32px;
+      display: flex; align-items: flex-start; gap: 18px;
+    }
+    .ch-icon { font-size: 38px; flex-shrink: 0; padding-top: 2px; }
+    .ch h2 { font-size: 26px; font-weight: 800; }
+    .ch p { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 5px; }
+
+    h3 {
+      font-size: 20px; color: var(--primary);
+      margin: 36px 0 14px; font-weight: 800;
+      padding-left: 14px;
+      border-left: 4px solid var(--accent);
+    }
+    p { margin-bottom: 14px; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 52px 0; }
+    section { margin-bottom: 64px; }
+
+    /* SCREENSHOT BOX */
+    .ss {
+      border: 2.5px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      min-height: 240px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      color: var(--muted); text-align: center;
+      padding: 32px 24px; margin: 22px 0;
+    }
+    .ss img { width: 100%; border-radius: 8px; box-shadow: 0 3px 12px rgba(0,0,0,0.10); display: block; }
+    .ss-icon { font-size: 44px; margin-bottom: 12px; opacity: 0.35; }
+    .ss-title { font-size: 14px; font-weight: 700; color: var(--warning); margin-bottom: 4px; }
+    .ss-hint { font-size: 12px; color: var(--muted); }
+    .caption {
+      text-align: center; font-size: 12px; color: var(--muted);
+      font-style: italic; margin: -10px 0 24px;
+    }
+
+    /* CALLOUTS */
+    .box {
+      border-left: 5px solid;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 16px 20px; margin: 18px 0; font-size: 15px;
+    }
+    .box strong { display: block; margin-bottom: 5px; font-size: 15px; }
+    .box-tip   { border-color: var(--success); background: #eef8f3; }
+    .box-tip strong { color: var(--success); }
+    .box-warn  { border-color: var(--warning); background: #fef8ec; }
+    .box-warn strong { color: var(--warning); }
+    .box-info  { border-color: var(--info); background: #eef4fc; }
+    .box-info strong { color: var(--info); }
+    .box-danger{ border-color: var(--danger); background: #fdf0f0; }
+    .box-danger strong { color: var(--danger); }
+
+    /* NUMBERED STEPS */
+    .steps { list-style: none; margin: 20px 0; }
+    .steps li {
+      display: grid; grid-template-columns: 42px 1fr;
+      gap: 14px; margin-bottom: 22px; align-items: start;
+    }
+    .sn {
+      width: 42px; height: 42px;
+      background: var(--accent); color: #fff;
+      border-radius: 50%; font-weight: 900; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .sc { padding-top: 8px; }
+    .sc strong { display: block; font-size: 16px; margin-bottom: 4px; }
+    .sc p { margin: 0; font-size: 15px; color: var(--muted); }
+
+    /* COMPARE */
+    .compare {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 18px; margin: 22px 0;
+    }
+    .compare-card { border-radius: var(--radius); padding: 22px 20px; }
+    .before { background: #fdf0f0; border: 1.5px solid #f0c0c0; }
+    .after  { background: #eef8f3; border: 1.5px solid #b8dfc9; }
+    .compare-card h4 { font-size: 16px; margin-bottom: 14px; }
+    .compare-card ul { list-style: none; }
+    .compare-card ul li { padding: 5px 0; font-size: 14px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .compare-card ul li:last-child { border: none; }
+    .before ul li::before { content: "✗  "; color: var(--danger); font-weight: 700; }
+    .after  ul li::before { content: "✓  "; color: var(--success); font-weight: 700; }
+
+    /* FEATURE GRID */
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px; margin: 22px 0;
+    }
+    .feat {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius); padding: 20px;
+    }
+    .feat .fi { font-size: 30px; margin-bottom: 10px; }
+    .feat h4 { font-size: 14px; font-weight: 800; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .feat p { font-size: 13px; color: var(--muted); margin: 0; }
+
+    /* BIG SIMPLE STEPS (for main flow) */
+    .big-steps { margin: 22px 0; }
+    .big-step {
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 22px 22px 74px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .big-step .bsn {
+      position: absolute; left: 20px; top: 20px;
+      width: 38px; height: 38px;
+      background: var(--primary); color: #fff;
+      border-radius: 50%; font-weight: 900; font-size: 17px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .big-step h4 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+    .big-step p { font-size: 14px; color: var(--muted); margin: 0; }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14px; }
+    thead { background: var(--primary); color: #fff; }
+    th { padding: 11px 16px; text-align: left; font-size: 13px; font-weight: 700; }
+    td { padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:nth-child(even) td { background: #f8f5f0; }
+
+    /* BADGE */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .b-must { background: #fde8e8; color: var(--danger); }
+    .b-opt  { background: #e8f5ee; color: var(--success); }
+    .b-free { background: #e8effe; color: var(--info); }
+
+    /* FAQ */
+    .faq { border-bottom: 1px solid var(--border); padding: 18px 0; }
+    .faq:last-child { border: none; }
+    .fq {
+      font-weight: 800; font-size: 16px; margin-bottom: 8px;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .fq::before {
+      content: "Q";
+      background: var(--accent); color: #fff;
+      width: 26px; height: 26px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0; margin-top: 1px;
+    }
+    .fa { font-size: 15px; color: var(--muted); padding-left: 38px; }
+
+    /* CHECKLIST */
+    .cl { list-style: none; }
+    .cl li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      font-size: 15px;
+    }
+    .cl li:last-child { border: none; }
+    .cb {
+      width: 20px; height: 20px; border: 2px solid var(--border);
+      border-radius: 5px; flex-shrink: 0; margin-top: 2px;
+    }
+
+    /* TOC */
+    .toc { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 32px 36px; margin-bottom: 60px; }
+    .toc h2 { font-size: 22px; margin-bottom: 24px; }
+    .toc-group { margin-bottom: 20px; }
+    .toc-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); font-weight: 800; margin-bottom: 8px; }
+    .toc-list { list-style: none; }
+    .toc-list li { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; border-bottom: 1px dotted var(--border); font-size: 14px; }
+    .toc-list a { color: var(--info); text-decoration: none; }
+    .toc-list a:hover { text-decoration: underline; }
+
+    /* HIGHLIGHT TAG */
+    .tag {
+      background: var(--accent); color: #fff;
+      border-radius: 5px; padding: 2px 8px;
+      font-size: 12px; font-weight: 700;
+    }
+
+    /* REAL SCREENSHOT — replaces dashed placeholder */
+    .ss-img {
+      margin: 20px 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+      background: #fff;
+    }
+    .ss-img img {
+      width: 100%; display: block;
+      object-fit: contain; max-height: 480px;
+    }
+
+    /* TWO SCREENSHOTS SIDE BY SIDE */
+    .ss-2col {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin: 20px 0;
+    }
+    .ss-2col-label {
+      text-align: center; font-size: 11px; font-weight: 700;
+      color: var(--muted); margin-top: 6px; text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* SETTINGS GRID — 2 columns, even heights */
+    .ss-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin: 20px 0;
+    }
+    .ss-grid .ss-img img { max-height: 340px; object-fit: cover; object-position: top; }
+
+    /* PRINT */
+    @media print {
+      .cover { page-break-after: always; }
+      section { page-break-inside: avoid; }
+      .ch { page-break-after: avoid; }
+      body { font-size: 14px; }
+      .ss-img img { max-height: 320px; }
+    }
+
+    @media (max-width: 600px) {
+      .ss-2col, .ss-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ COVER ═══ -->
+<div class="cover">
+  <div class="cover-icon">📦</div>
+  <h1>DispatchFlow</h1>
+  <div class="sub">Business Guide &amp; Setup Manual</div>
+  <div class="tagline">Click a photo of your slip.<br>The app does the rest.</div>
+  <div class="desc">
+    A complete guide written for business owners and factory staff —
+    no computer knowledge needed. If you can use WhatsApp, you can use DispatchFlow.
+  </div>
+  <div class="cover-strip">
+    <span>For: Indian MSMEs</span>
+    <span>Language: Simple English</span>
+    <span>April 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ MAIN ═══ -->
+<div class="page">
+
+  <!-- TOC -->
+  <div class="toc">
+    <h2>📋 What's Inside This Guide</h2>
+
+    <div class="toc-group">
+      <div class="toc-group-title">Part 1 — Understanding the App</div>
+      <ul class="toc-list">
+        <li><a href="#what">1. What is DispatchFlow?</a></li>
+        <li><a href="#why">2. Why Does Your Business Need It?</a></li>
+        <li><a href="#how">3. How Does It Work? (No Tech Talk)</a></li>
+        <li><a href="#features">4. Everything the App Can Do</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <div class="toc-group-title">Part 2 — Getting Started</div>
+      <ul class="toc-list">
+        <li><a href="#need">5. What You Need Before Starting</a></li>
+        <li><a href="#itsetup">6. One-Time Setup (Your IT Person Does This)</a></li>
+        <li><a href="#firstopen">7. Opening the App for the First Time</a></li>
+        <li><a href="#wizard">8. The Setup Wizard — 4 Simple Steps</a></li>
+        <li><a href="#google">9. Connecting to Google Sheets (Optional)</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <div class="toc-group-title">Part 3 — Using the App Every Day</div>
+      <ul class="toc-list">
+        <li><a href="#dispatch">10. Scanning a Dispatch Slip</a></li>
+        <li><a href="#invoice">11. Creating an Invoice</a></li>
+        <li><a href="#history">12. Finding Old Records</a></li>
+        <li><a href="#print">13. Printing a Slip</a></li>
+        <li><a href="#backup">14. Taking a Backup (Very Important!)</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <div class="toc-group-title">Part 4 — For the Business Owner</div>
+      <ul class="toc-list">
+        <li><a href="#settings">15. The Settings Page</a></li>
+        <li><a href="#operators">16. Managing Your Staff on the App</a></li>
+        <li><a href="#pin">17. Keeping the App Safe (PIN)</a></li>
+        <li><a href="#templates">18. Ready-Made Templates for Your Industry</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <div class="toc-group-title">Part 5 — Help</div>
+      <ul class="toc-list">
+        <li><a href="#faq">19. Common Questions</a></li>
+        <li><a href="#problems">20. Something Not Working?</a></li>
+        <li><a href="#words">21. Simple Explanations of App Words</a></li>
+        <li><a href="#checklist">22. Setup Checklist (Print &amp; Tick)</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <!-- ══════════ PART 1 ══════════ -->
+
+  <!-- 1 -->
+  <section id="what">
+    <div class="ch">
+      <div class="ch-icon">🏭</div>
+      <div>
+        <h2>1. What is DispatchFlow?</h2>
+        <p>Understanding what this app does in everyday language</p>
+      </div>
+    </div>
+
+    <p>
+      Every day your factory sends out goods. Each shipment has a paper slip — the customer's name,
+      what was sent, how many pieces, the vehicle number. At the end of the day, someone has to
+      sit down and type all of this into a register or Excel file. This takes a long time and
+      mistakes happen easily.
+    </p>
+
+    <p>
+      <strong>DispatchFlow solves this problem.</strong> You simply take a photo of the paper slip
+      using a camera, and the app reads all the information automatically — just like how you scan
+      a QR code on your phone. It fills in the details for you. You check it, click Save, and you
+      are done. The whole thing takes about 2 minutes instead of 15.
+    </p>
+
+    <div class="compare">
+      <div class="compare-card before">
+        <h4 style="color:#B83232;">❌ The Old Way</h4>
+        <ul>
+          <li>Type everything by hand into Excel</li>
+          <li>Spelling mistakes and wrong numbers</li>
+          <li>Hard to find a record from 3 months ago</li>
+          <li>Paper slips get lost or torn</li>
+          <li>1–2 hours of data entry every day</li>
+          <li>No copy kept anywhere safe</li>
+        </ul>
+      </div>
+      <div class="compare-card after">
+        <h4 style="color:#2D7A4F;">✅ With DispatchFlow</h4>
+        <ul>
+          <li>Take a photo — app fills the form</li>
+          <li>Data is always correct</li>
+          <li>Search any record in 5 seconds</li>
+          <li>Everything stored safely on your device</li>
+          <li>Under 2 minutes per slip</li>
+          <li>Automatic backup to Google Sheets</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="box box-info">
+      <strong>💡 Think of it like this</strong>
+      DispatchFlow is like having a very fast and accurate office assistant who reads your
+      paper slips, types the data for you, stores it safely, and can find any record
+      whenever you need it — all for free.
+    </div>
+
+  </section>
+
+  <hr />
+
+  <!-- 2 -->
+  <section id="why">
+    <div class="ch">
+      <div class="ch-icon">💡</div>
+      <div>
+        <h2>2. Why Does Your Business Need It?</h2>
+        <p>The real problems this app solves for small Indian businesses</p>
+      </div>
+    </div>
+
+    <h3>Who is this made for?</h3>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="fi">🧵</div>
+        <h4>Textile &amp; Garments</h4>
+        <p>Track rolls, fabric types, colors, designs going out to buyers</p>
+      </div>
+      <div class="feat">
+        <div class="fi">⚙️</div>
+        <h4>Engineering &amp; Parts</h4>
+        <p>Record part names, lot numbers, material grades for each delivery</p>
+      </div>
+      <div class="feat">
+        <div class="fi">💊</div>
+        <h4>Pharma &amp; Healthcare</h4>
+        <p>Capture batch numbers, manufacturing and expiry dates easily</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🍱</div>
+        <h4>Food &amp; Processing</h4>
+        <p>Track production batches, best-before dates, storage details</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🏪</div>
+        <h4>Trading &amp; Distribution</h4>
+        <p>Manage outgoing invoices and deliveries to multiple parties</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🏭</div>
+        <h4>Any Factory or Workshop</h4>
+        <p>Fully customizable — works for any product, any business</p>
+      </div>
+    </div>
+
+    <h3>The 5 Biggest Benefits</h3>
+    <div class="big-steps">
+      <div class="big-step">
+        <div class="bsn">1</div>
+        <h4>Saves Time — a Lot of It</h4>
+        <p>What used to take 15 minutes per slip now takes under 2 minutes. For a factory doing 30 dispatches a day, that is 4–5 hours saved every single day.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">2</div>
+        <h4>No More Typing Mistakes</h4>
+        <p>Wrong customer names, wrong quantities, wrong dates — these mistakes go away because the app reads the slip directly instead of a person retyping it.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">3</div>
+        <h4>Reads Hindi, Marathi, and English</h4>
+        <p>Most Indian factory slips have a mix of languages. DispatchFlow reads all three — even handwritten notes added on the side of a printed slip.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">4</div>
+        <h4>Works Even Without Internet</h4>
+        <p>Power cut or no WiFi? No problem. The app works completely without internet. It just saves everything on your computer and syncs later when internet is back.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">5</div>
+        <h4>No Monthly Fees or Expensive Software</h4>
+        <p>There is no subscription. No ERP system to buy. The tools used are free. You only need a computer, a camera, and this app.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 3 -->
+  <section id="how">
+    <div class="ch">
+      <div class="ch-icon">🔍</div>
+      <div>
+        <h2>3. How Does It Work?</h2>
+        <p>A simple explanation — no technical words used</p>
+      </div>
+    </div>
+
+    <p>
+      You do not need to understand the technology. Here is the simple story of what happens
+      when you scan a dispatch slip:
+    </p>
+
+    <ul class="steps">
+      <li>
+        <div class="sn">1</div>
+        <div class="sc">
+          <strong>You hold the paper slip under the camera</strong>
+          <p>A live picture of the slip appears on your screen — just like using the camera on your phone.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">2</div>
+        <div class="sc">
+          <strong>You press the Capture button</strong>
+          <p>The app takes a photo of the slip. A small loading bar appears for a few seconds.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">3</div>
+        <div class="sc">
+          <strong>The app reads all the text on the slip</strong>
+          <p>A program called OCR looks at the photo and reads every word and number on it — like how your eye reads a page, but much faster. It understands Hindi, Marathi, and English.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">4</div>
+        <div class="sc">
+          <strong>Google's AI fills in the form for you</strong>
+          <p>A smart program understands which piece of text belongs where — customer name goes in the customer field, quantity goes in the quantity field, and so on. Fields it has filled are shown highlighted in orange so you can easily spot them.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">5</div>
+        <div class="sc">
+          <strong>You check the form and click Save</strong>
+          <p>Look at the form, fix anything if needed, and click Save. Done. The record is now safely stored.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">6</div>
+        <div class="sc">
+          <strong>The record appears in your Google Sheet automatically</strong>
+          <p>If you have connected Google Sheets, the entry is added there too — in the background, without you doing anything extra.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="ss-2col">
+      <div>
+        <div class="ss-img"><img src="screenshots/Camera view with the invoice.jpeg" alt="Camera pointed at an invoice" /></div>
+        <div class="ss-2col-label">Camera pointed at the document</div>
+      </div>
+      <div>
+        <div class="ss-img"><img src="screenshots/Form auto-filled by the app.png" alt="Form auto-filled by OCR" /></div>
+        <div class="ss-2col-label">Form filled automatically — orange = read from the slip</div>
+      </div>
+    </div>
+    <p class="caption">Left: Camera captures the document. Right: Every field is filled in automatically.</p>
+
+    <div class="box box-tip">
+      <strong>✅ What If the App Reads Something Wrong?</strong>
+      No problem — you can always correct any field by clicking on it and typing the right value.
+      The orange highlight makes it easy to spot which fields to check.
+      For very smudged or faded slips, just type those fields manually.
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 4 -->
+  <section id="features">
+    <div class="ch">
+      <div class="ch-icon">⭐</div>
+      <div>
+        <h2>4. Everything the App Can Do</h2>
+        <p>A full list of features at a glance</p>
+      </div>
+    </div>
+
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="fi">📷</div>
+        <h4>Camera Scanning</h4>
+        <p>Point your camera at a slip and the app reads it instantly</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🖼️</div>
+        <h4>Photo Upload</h4>
+        <p>Already have a photo on your phone? Upload that instead</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🤖</div>
+        <h4>AI Auto-Fill</h4>
+        <p>Smart AI fills every form field from the scanned slip</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🔤</div>
+        <h4>Hindi + Marathi + English</h4>
+        <p>Reads text in all three languages, even handwriting</p>
+      </div>
+      <div class="feat">
+        <div class="fi">📶</div>
+        <h4>Works Offline</h4>
+        <p>No internet needed. Works during power cuts too</p>
+      </div>
+      <div class="feat">
+        <div class="fi">📊</div>
+        <h4>Google Sheets Sync</h4>
+        <p>Records go to your Google Sheet automatically</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🔍</div>
+        <h4>Quick Search</h4>
+        <p>Find any record by name, date, or any word instantly</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🖨️</div>
+        <h4>Print Slips</h4>
+        <p>Print professional slips with your company name and logo</p>
+      </div>
+      <div class="feat">
+        <div class="fi">📥</div>
+        <h4>Excel Export</h4>
+        <p>Download all records as an Excel file anytime</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🔒</div>
+        <h4>PIN Lock</h4>
+        <p>Settings protected by a PIN — only the owner can change them</p>
+      </div>
+      <div class="feat">
+        <div class="fi">👷</div>
+        <h4>Staff Tracking</h4>
+        <p>Every record shows which staff member created it</p>
+      </div>
+      <div class="feat">
+        <div class="fi">💾</div>
+        <h4>Backup &amp; Restore</h4>
+        <p>Save a copy of all your data and restore it anytime</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🧾</div>
+        <h4>Invoice Scanning</h4>
+        <p>Scan invoices with multiple items — all extracted automatically</p>
+      </div>
+      <div class="feat">
+        <div class="fi">🏭</div>
+        <h4>Customizable Form</h4>
+        <p>Add or remove fields to match your own paper slip design</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════ PART 2 ══════════ -->
+
+  <!-- 5 -->
+  <section id="need">
+    <div class="ch">
+      <div class="ch-icon">📋</div>
+      <div>
+        <h2>5. What You Need Before Starting</h2>
+        <p>A simple list of what is required — most of it is free</p>
+      </div>
+    </div>
+
+    <h3>The Computer</h3>
+    <p>
+      Any computer or laptop running Windows 10 or Windows 11 will work.
+      It should have at least <strong>4 GB of memory</strong> and around
+      <strong>3 GB of free storage space</strong> (for the app files).
+      A laptop with a built-in webcam works perfectly.
+    </p>
+
+    <h3>The Camera</h3>
+    <p>
+      Any webcam works. If your laptop has a built-in camera, that is enough.
+      For better results, a camera of 5 megapixels or more is recommended
+      (most basic webcams qualify). You can also use your mobile phone camera
+      by opening the app in your phone's browser.
+    </p>
+
+    <h3>What You Need to Get (All Free)</h3>
+    <table>
+      <thead><tr><th>What</th><th>Do You Need It?</th><th>How to Get It</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Gemini API Key</strong><br><small style="color:var(--muted);">This is what lets the AI read your slips</small></td>
+          <td><span class="badge b-must">Must Have</span></td>
+          <td>Ask your IT person — takes 5 minutes to get</td>
+          <td><span class="badge b-free">Free</span></td>
+        </tr>
+        <tr>
+          <td><strong>Google Account</strong><br><small style="color:var(--muted);">For syncing to Google Sheets</small></td>
+          <td><span class="badge b-opt">Optional</span></td>
+          <td>You likely already have one (Gmail)</td>
+          <td><span class="badge b-free">Free</span></td>
+        </tr>
+        <tr>
+          <td><strong>Google Sheet</strong><br><small style="color:var(--muted);">The spreadsheet where records are stored online</small></td>
+          <td><span class="badge b-opt">Optional</span></td>
+          <td>Create at sheets.google.com</td>
+          <td><span class="badge b-free">Free</span></td>
+        </tr>
+        <tr>
+          <td><strong>Internet Connection</strong><br><small style="color:var(--muted);">Only needed during first setup</small></td>
+          <td><span class="badge b-opt">First time only</span></td>
+          <td>Mobile hotspot is fine for setup</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box box-info">
+      <strong>ℹ️ What is a Gemini API Key?</strong>
+      Think of it as a special password that lets DispatchFlow use Google's AI.
+      It is free to get, and your IT person can set it up for you in about 5 minutes.
+      See Section 9 for details.
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 6 -->
+  <section id="itsetup">
+    <div class="ch">
+      <div class="ch-icon">🛠️</div>
+      <div>
+        <h2>6. One-Time Setup</h2>
+        <p>This section is for your IT person or computer-savvy staff member</p>
+      </div>
+    </div>
+
+    <div class="box box-warn">
+      <strong>⚠️ For Business Owners — Read This First</strong>
+      This section describes the technical setup that only needs to happen <strong>once</strong>,
+      and only needs to be done by your IT person or someone comfortable with computers.
+      After this is done, everyone else just opens the app in their browser — no technical steps needed.
+      <br /><br />
+      <strong>If you are the business owner reading this — hand this section to your IT support person
+      and ask them to complete the setup. Then skip to Section 7.</strong>
+    </div>
+
+    <h3>What the IT Person Needs to Install</h3>
+    <p>
+      The app has two parts that need to be installed on the computer once:
+    </p>
+
+    <div class="big-steps">
+      <div class="big-step">
+        <div class="bsn">A</div>
+        <h4>The Reading Engine</h4>
+        <p>
+          This is the behind-the-scenes program that looks at photos of slips and reads the text.
+          It runs quietly in the background. Your IT person installs this using the setup files
+          in the <strong>ocr-backend</strong> folder. Full technical instructions are in the
+          <strong>README.md</strong> file included with the application.
+        </p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">B</div>
+        <h4>The Web App (What You See on Screen)</h4>
+        <p>
+          This is the screens, buttons, and forms you use daily. Your IT person sets this up
+          from the <strong>ocr-frontend</strong> folder. After setup, you open it by visiting
+          a simple address in your web browser — like opening a website.
+          Full instructions are in the <strong>README.md</strong> file.
+        </p>
+      </div>
+    </div>
+
+    <div class="box box-tip">
+      <strong>✅ After the Setup is Done</strong>
+      The IT person should create a simple shortcut on the Desktop so that every morning,
+      staff just double-click it and the app is ready. They open their browser, go to the
+      app address, and start working — no commands, no technical steps.
+    </div>
+
+    <div class="box box-info">
+      <strong>ℹ️ How Long Does Setup Take?</strong>
+      About 30–45 minutes total for a first-time setup, mostly because the reading engine
+      downloads some files automatically during first start. After that, startup every day
+      takes about 30 seconds.
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 7 -->
+  <section id="firstopen">
+    <div class="ch">
+      <div class="ch-icon">🌐</div>
+      <div>
+        <h2>7. Opening the App for the First Time</h2>
+        <p>What you see when you first open DispatchFlow</p>
+      </div>
+    </div>
+
+    <p>
+      DispatchFlow is available online — no installation needed on your computer.
+      Just open a browser and go to the link. That is it.
+    </p>
+
+    <ul class="steps">
+      <li>
+        <div class="sn">1</div>
+        <div class="sc">
+          <strong>Open Google Chrome on your computer or phone</strong>
+          <p>Chrome works best. You can also use Edge or any modern browser.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">2</div>
+        <div class="sc">
+          <strong>Go to the DispatchFlow link</strong>
+          <p>Type or click the link that has been shared with you — it will look something like
+          <strong>dispatchflow.vercel.app</strong>. Bookmark it immediately so you can open it with one click every day.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">3</div>
+        <div class="sc">
+          <strong>The first time: a Setup Wizard appears</strong>
+          <p>The app guides you through a 4-step setup to enter your company details. This only happens once. See Section 8.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">4</div>
+        <div class="sc">
+          <strong>Every time after that: enter your name and start working</strong>
+          <p>Each time you open the app, it asks for your name. Type it and press OK. You are now on the home screen, ready to scan slips.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="box box-tip">
+      <strong>✅ Bookmark the Link</strong>
+      After opening the app for the first time, press <strong>Ctrl + D</strong> (or tap the star icon
+      in the address bar on mobile) to save it as a bookmark. From then on, one click opens the app —
+      no typing the address every day.
+    </div>
+
+    <div class="ss-img">
+      <img src="screenshots/the name prompt.png" alt="Operator name prompt screen" />
+    </div>
+    <p class="caption">The name prompt — type your name and press OK to start your session</p>
+  </section>
+
+  <hr />
+
+  <!-- 8 -->
+  <section id="wizard">
+    <div class="ch">
+      <div class="ch-icon">🧙</div>
+      <div>
+        <h2>8. The Setup Wizard — 4 Simple Steps</h2>
+        <p>Happens only once — takes about 10 minutes to complete</p>
+      </div>
+    </div>
+
+    <p>
+      The very first time you open DispatchFlow, it shows a setup wizard.
+      It walks you through 4 steps to set up the app for your business.
+      After you finish, it never shows again.
+    </p>
+
+    <h3>Step 1 — Your Company Information</h3>
+    <p>Fill in your company's basic details. These will appear on every printed slip.</p>
+
+    <table>
+      <thead><tr><th>What to Fill</th><th>Example</th><th>Required?</th></tr></thead>
+      <tbody>
+        <tr><td>Company Name</td><td>Sharma Industries Pvt. Ltd.</td><td><span class="badge b-must">Yes</span></td></tr>
+        <tr><td>GST Number</td><td>27AABCS1234Z1Z5</td><td><span class="badge b-must">Yes</span></td></tr>
+        <tr><td>Address</td><td>Plot 45, MIDC, Pune</td><td><span class="badge b-opt">Optional</span></td></tr>
+        <tr><td>Company Logo</td><td>Upload an image of your logo</td><td><span class="badge b-opt">Optional</span></td></tr>
+        <tr><td>Admin PIN</td><td>Choose any 4–8 digit number (e.g. 4728)</td><td><span class="badge b-must">Yes</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="box box-warn">
+      <strong>⚠️ Write Down Your Admin PIN!</strong>
+      This PIN protects the Settings area of the app. If you forget it, you will not be able
+      to change settings without resetting the app. Write it down and keep it safe —
+      only you and trusted senior staff should know it.
+    </div>
+
+    <div class="ss-img">
+      <img src="screenshots/Setup wizard.png" alt="Setup Wizard Step 1 — Company Details" />
+    </div>
+    <p class="caption">Step 1 — enter your company name, GST number, address, and choose your Admin PIN</p>
+
+    <h3>Step 2 — Choose Your Industry Type</h3>
+    <p>
+      Select the type of business you run. This loads a ready-made form layout with fields
+      that are relevant to your industry. You can change these fields in the next step.
+    </p>
+
+    <table>
+      <thead><tr><th>Option</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td>🧵 Textile / Garment</td><td>Fabric mills, garment exporters, weaving units</td></tr>
+        <tr><td>💊 Pharma</td><td>Medicine manufacturers, distributors, labs</td></tr>
+        <tr><td>⚙️ Engineering / Industrial</td><td>Auto parts, machine components, metal fabrication</td></tr>
+        <tr><td>🍱 Food &amp; Packaging</td><td>Food processing, catering supply, packaged goods</td></tr>
+        <tr><td>📦 General / Other</td><td>Any other type of business — start with basic fields</td></tr>
+      </tbody>
+    </table>
+
+    <div class="ss-img">
+      <img src="screenshots/Industry template selection with 5 options.png" alt="Industry template selection" />
+    </div>
+    <p class="caption">Step 2 — choose the industry template that best matches your business</p>
+
+    <h3>Step 3 — Set Up Your Slip Fields</h3>
+    <p>
+      This step shows all the fields that will appear on your dispatch slip form.
+      You can adjust them to match your own paper slip exactly.
+    </p>
+
+    <ul style="padding-left: 20px; line-height: 2.2;">
+      <li><strong>Drag fields up or down</strong> to change the order they appear on the form</li>
+      <li><strong>Click the + button</strong> to add a new field (e.g. "Driver Name", "Transport Company")</li>
+      <li><strong>Click the bin icon</strong> to remove a field you do not use</li>
+      <li>Fields with a 🔒 lock icon cannot be removed — they are needed by the system (like Slip Number and Date)</li>
+    </ul>
+
+    <div class="box box-tip">
+      <strong>✅ Tip — Match Your Existing Paper Slip</strong>
+      Look at the paper slips your factory currently uses. Add or remove fields here
+      so the screen form matches your paper slip exactly. This makes it faster
+      to review the auto-filled form.
+    </div>
+
+    <div class="ss-img">
+      <img src="screenshots/the form field editor with drag handles and adddelete buttons.png" alt="Form field editor with drag handles" />
+    </div>
+    <p class="caption">Step 3 — drag to reorder fields, use + to add new ones, bin icon to remove</p>
+
+    <h3>Step 4 — Connect to Google (Optional)</h3>
+    <p>
+      This step lets you connect the app to Google so that every record is automatically saved
+      to a Google Sheet as well. You can skip this for now and do it later from the Settings page.
+    </p>
+
+    <p>You will need:</p>
+    <ul style="padding-left: 20px; line-height: 2.2;">
+      <li>A <strong>Gemini API Key</strong> — the free key that lets AI read your slips (see Section 9)</li>
+      <li>A <strong>Google Sheet link</strong> — the spreadsheet where records will be stored</li>
+    </ul>
+
+    <div class="ss-img">
+      <img src="screenshots/Google connection screen with API key field and Skip button.png" alt="Google connection screen with API key field and Skip button" />
+    </div>
+    <p class="caption">Step 4 — paste your Gemini API key here, or click Skip to set it up later from Settings</p>
+
+    <p>
+      After finishing all 4 steps, the app will ask for your name.
+      Type your name and click OK. You are now on the home screen — ready to scan!
+    </p>
+  </section>
+
+  <hr />
+
+  <!-- 9 -->
+  <section id="google">
+    <div class="ch">
+      <div class="ch-icon">📊</div>
+      <div>
+        <h2>9. Connecting to Google Sheets</h2>
+        <p>Automatically save all records to a Google spreadsheet — completely optional</p>
+      </div>
+    </div>
+
+    <div class="box box-info">
+      <strong>ℹ️ You Can Skip This Completely</strong>
+      All records are stored safely on your computer even without Google Sheets.
+      Google Sheets is only useful if you want records to also appear in a spreadsheet
+      that you can view from anywhere or share with your accountant.
+    </div>
+
+    <h3>Part A — Getting the Gemini API Key (the AI key)</h3>
+    <p>This key is needed for the AI to understand and fill your form. It is free.</p>
+
+    <ul class="steps">
+      <li>
+        <div class="sn">1</div>
+        <div class="sc">
+          <strong>Open Google AI Studio in your browser</strong>
+          <p>Make sure you are logged in to your Google account (the same one you use for Gmail).</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">2</div>
+        <div class="sc">
+          <strong>Click "Get API Key" and then "Create API Key"</strong>
+          <p>A long string of letters and numbers will appear. This is your key.</p>
+        </div>
+      </li>
+      <li>
+        <div class="sn">3</div>
+        <div class="sc">
+          <strong>Copy the key and paste it in DispatchFlow Settings</strong>
+          <p>Go to Settings → API Configuration → Gemini API Key field → Paste → Save.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="ss-img">
+      <img src="screenshots/Google AI Studio — click Create API Key to get your free Gemini key.png" alt="Google AI Studio — Create API Key button" />
+    </div>
+    <p class="caption">Google AI Studio — click "Create API Key" to generate your free Gemini key</p>
+
+    <h3>Part B — Setting Up the Google Sheet Link</h3>
+    <p>
+      This is a bit technical — it is best to have your IT person do this part.
+      The app's Settings page includes full step-by-step instructions and even
+      a "Copy Code" button that gives you exactly what to paste into Google.
+      Your IT person will know what to do with it.
+    </p>
+
+    <p>Once set up, the connection is permanent — you do not need to do it again.
+    Every new dispatch record will automatically appear in the Google Sheet.</p>
+  </section>
+
+
+  <!-- ══════════ PART 3 ══════════ -->
+
+  <!-- 10 -->
+  <section id="dispatch">
+    <div class="ch">
+      <div class="ch-icon">📦</div>
+      <div>
+        <h2>10. Scanning a Dispatch Slip</h2>
+        <p>The main daily task — from paper to digital in under 2 minutes</p>
+      </div>
+    </div>
+
+    <h3>Using the Camera</h3>
+
+    <div class="big-steps">
+      <div class="big-step">
+        <div class="bsn">1</div>
+        <h4>Click "New Dispatch" on the home screen</h4>
+        <p>A large orange button on the home screen. The scan page will open.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">2</div>
+        <h4>Click the camera button to turn on the camera</h4>
+        <p>Your browser may ask for camera permission the first time — click Allow.
+        A live video of what the camera sees will appear on the left side of the screen.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">3</div>
+        <h4>Hold the slip flat under the camera and click Capture</h4>
+        <p>The whole slip should be visible. Make sure there is good light.
+        Avoid shadows falling on the slip. Hold the camera directly above, not at an angle.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">4</div>
+        <h4>Wait 5–15 seconds for the form to fill itself</h4>
+        <p>A loading bar appears. When it finishes, all the fields on the right side of the screen
+        will be filled automatically. Orange/amber coloured fields were filled by the app — these
+        are the ones to quickly check.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">5</div>
+        <h4>Check the form and correct anything if needed</h4>
+        <p>Click on any field that looks wrong and type the correct value.
+        This takes about 20–30 seconds.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">6</div>
+        <h4>Click "Save" or "Save &amp; Print"</h4>
+        <p>The record is now saved. If you chose "Save &amp; Print", the print screen opens immediately.</p>
+      </div>
+    </div>
+
+    <h3>Using a Photo Instead of the Camera</h3>
+    <p>
+      If you already have a photo of the slip (taken on your phone and transferred to the computer,
+      or received on WhatsApp), you can upload it instead:
+    </p>
+    <ul style="padding-left: 20px; line-height: 2.4;">
+      <li>Click the <strong>Upload</strong> button on the scan screen</li>
+      <li>Choose the photo file from your computer</li>
+      <li>The rest works the same — the app reads and fills the form automatically</li>
+    </ul>
+
+    <div class="box box-tip">
+      <strong>✅ Tips for Getting the Best Results from the Camera</strong>
+      <ul style="margin-top: 8px; padding-left: 18px; line-height: 2.2;">
+        <li>Use a well-lit area — a desk near a window works well</li>
+        <li>Lay the slip flat on a plain surface (white table or plain desk)</li>
+        <li>Hold the camera or position the webcam directly above — not from the side</li>
+        <li>Make sure the full slip is visible, with no edges cut off</li>
+        <li>Avoid shiny paper — if the slip is glossy, tilt it very slightly to remove the glare</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 11 -->
+  <section id="invoice">
+    <div class="ch">
+      <div class="ch-icon">🧾</div>
+      <div>
+        <h2>11. Creating an Invoice Record</h2>
+        <p>Scan invoices with multiple items — everything extracted automatically</p>
+      </div>
+    </div>
+
+    <p>
+      Invoices often list several items — for example, 5 different products with their
+      own quantities and prices. DispatchFlow handles this automatically.
+      It extracts each product line separately, so you do not have to enter them one by one.
+    </p>
+
+    <div class="big-steps">
+      <div class="big-step">
+        <div class="bsn">1</div>
+        <h4>Click "New Invoice" on the home screen</h4>
+        <p>This opens the invoice scan page, which works just like the dispatch scan page.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">2</div>
+        <h4>Scan or upload the invoice image</h4>
+        <p>Same process as scanning a dispatch slip.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">3</div>
+        <h4>The app extracts every line item separately</h4>
+        <p>Each product (name, quantity, rate, amount) appears as its own row in the form.
+        If the invoice has 8 items, all 8 will be filled automatically.</p>
+      </div>
+      <div class="big-step">
+        <div class="bsn">4</div>
+        <h4>Check the buyer name, invoice number, and total</h4>
+        <p>Verify the header information is correct, then click Save.</p>
+      </div>
+    </div>
+
+    <div class="ss-2col">
+      <div>
+        <div class="ss-img"><img src="screenshots/Camera view with the invoice.jpeg" alt="Camera scanning an invoice" /></div>
+        <div class="ss-2col-label">Camera pointed at the invoice</div>
+      </div>
+      <div>
+        <div class="ss-img"><img src="screenshots/Form auto-filled by the app.png" alt="Form auto-filled with invoice line items" /></div>
+        <div class="ss-2col-label">All line items extracted automatically</div>
+      </div>
+    </div>
+    <p class="caption">The invoice is scanned on the left — every product line appears filled in on the right</p>
+  </section>
+
+  <hr />
+
+  <!-- 12 -->
+  <section id="history">
+    <div class="ch">
+      <div class="ch-icon">📋</div>
+      <div>
+        <h2>12. Finding Old Records</h2>
+        <p>Search through all your past dispatches and invoices in seconds</p>
+      </div>
+    </div>
+
+    <p>
+      Click <strong>History</strong> in the top menu to see all your past dispatch slips.
+      Click <strong>Invoices → History</strong> to see all invoices.
+    </p>
+
+    <h3>Ways to Find a Record</h3>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="fi">🔍</div>
+        <h4>Search by Word</h4>
+        <p>Type a customer name, part number, or any word in the search bar. Matching records appear instantly.</p>
+      </div>
+      <div class="feat">
+        <div class="fi">📅</div>
+        <h4>Filter by Date</h4>
+        <p>Select a From and To date to see all dispatches in that time period.</p>
+      </div>
+      <div class="feat">
+        <div class="fi">👷</div>
+        <h4>Filter by Staff Name</h4>
+        <p>See only records created by one specific staff member.</p>
+      </div>
+      <div class="feat">
+        <div class="fi">📥</div>
+        <h4>Download as Excel</h4>
+        <p>Click "Export CSV" to download all filtered records as an Excel-compatible file.</p>
+      </div>
+    </div>
+
+    <div class="ss-img">
+      <img src="screenshots/History page.png" alt="Dispatch History page with search and filters" />
+    </div>
+    <p class="caption">The History page — search by keyword, filter by date or staff name, download as Excel</p>
+
+    <h3>Editing a Record You Just Saved</h3>
+    <p>
+      Made a mistake after saving? You can edit a record within the
+      <strong>grace period</strong> — by default this is 30 minutes after saving.
+      After that, the record is locked to prevent accidental changes.
+      The grace period can be changed in Settings.
+    </p>
+  </section>
+
+  <hr />
+
+  <!-- 13 -->
+  <section id="print">
+    <div class="ch">
+      <div class="ch-icon">🖨️</div>
+      <div>
+        <h2>13. Printing a Slip</h2>
+        <p>Get a professional printed copy with your company name and logo</p>
+      </div>
+    </div>
+
+    <p>
+      Every dispatch slip and invoice can be printed in a clean, professional format.
+      The printed copy automatically includes:
+    </p>
+    <ul style="padding-left: 20px; line-height: 2.2;">
+      <li>Your <strong>company name, GST number, and address</strong> at the top</li>
+      <li>Your <strong>company logo</strong> (if you uploaded one in Setup)</li>
+      <li>All the dispatch details in a neat table</li>
+      <li>The slip number, date, and the name of the staff member who created it</li>
+    </ul>
+
+    <h3>How to Print</h3>
+    <ol style="padding-left: 20px; line-height: 2.4;">
+      <li>Open any record from History or right after saving a new one</li>
+      <li>Click the <strong>Print button</strong> (it looks like a printer icon)</li>
+      <li>A print preview opens — check it looks correct</li>
+      <li>Select your printer and click Print</li>
+      <li>Or, to save as a PDF, choose <strong>"Save as PDF"</strong> instead of a printer</li>
+    </ol>
+
+    <div class="ss-img">
+      <img src="screenshots/Print preview.png" alt="Print preview with company header and dispatch details" />
+    </div>
+    <p class="caption">Print preview — your company name and logo at the top, all dispatch details neatly below</p>
+  </section>
+
+  <hr />
+
+  <!-- 14 -->
+  <section id="backup">
+    <div class="ch">
+      <div class="ch-icon">💾</div>
+      <div>
+        <h2>14. Taking a Backup</h2>
+        <p>Protect your data — a weekly backup takes 10 seconds</p>
+      </div>
+    </div>
+
+    <div class="box box-danger">
+      <strong>⚠️ Very Important — Please Read</strong>
+      Your records are stored inside the web browser on your computer. If someone clears the
+      browser data, reinstalls the computer, or the browser resets — all records can be lost.
+      <br /><br />
+      <strong>Take a backup at least once a week. It takes 10 seconds and can save months of data.</strong>
+    </div>
+
+    <h3>How to Take a Backup</h3>
+    <ol style="padding-left: 20px; line-height: 2.4;">
+      <li>Click the <strong>Settings</strong> icon in the top-right corner</li>
+      <li>Enter your Admin PIN when asked</li>
+      <li>Scroll to the section called <strong>"Data Management"</strong></li>
+      <li>Click the button <strong>"Export Backup Now"</strong></li>
+      <li>A file will be downloaded to your computer with today's date in its name</li>
+      <li>Copy this file to a USB drive, or email it to yourself as an attachment</li>
+    </ol>
+
+    <h3>How to Restore from a Backup</h3>
+    <ol style="padding-left: 20px; line-height: 2.4;">
+      <li>Go to Settings → Data Management</li>
+      <li>Click <strong>"Import from Backup"</strong></li>
+      <li>Select the backup file from your computer or USB drive</li>
+      <li>All your records will be restored. Nothing will be overwritten or deleted.</li>
+    </ol>
+
+    <div class="box box-tip">
+      <strong>✅ The App Reminds You Automatically</strong>
+      Every Monday morning, a reminder banner appears on the home screen:
+      "Time to take your weekly backup!" Just click the button on the banner and save the file.
+      Do not click "Later" and ignore it — your data is important!
+    </div>
+
+    <div class="ss-img">
+      <img src="screenshots/The backup reminder appears every Monday.png" alt="Weekly backup reminder banner on Dashboard" />
+    </div>
+    <p class="caption">The backup reminder banner — click "Download Backup" as soon as you see this</p>
+  </section>
+
+
+  <!-- ══════════ PART 4 ══════════ -->
+
+  <!-- 15 -->
+  <section id="settings">
+    <div class="ch">
+      <div class="ch-icon">⚙️</div>
+      <div>
+        <h2>15. The Settings Page</h2>
+        <p>The control panel for the app — protected by your Admin PIN</p>
+      </div>
+    </div>
+
+    <p>
+      The Settings page is where you control everything about how the app works.
+      It is locked behind your Admin PIN so that staff cannot change things by accident.
+    </p>
+
+    <table>
+      <thead><tr><th>Setting</th><th>What It Does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Company Details</strong></td><td>Change your company name, GST, address, or logo</td></tr>
+        <tr><td><strong>API Keys</strong></td><td>Enter or update the Gemini AI key and Google Sheet connection</td></tr>
+        <tr><td><strong>Auto-Lock Timer</strong></td><td>How many minutes before the app locks itself if left idle (to protect against unauthorized use)</td></tr>
+        <tr><td><strong>Edit Window</strong></td><td>How long after saving a record can it be edited (grace period)</td></tr>
+        <tr><td><strong>Form Fields</strong></td><td>Add, remove, or reorder the fields on your dispatch slip form</td></tr>
+        <tr><td><strong>Backup &amp; Restore</strong></td><td>Download a backup of all records or import one</td></tr>
+        <tr><td><strong>Auto-Delete Old Records</strong></td><td>Automatically delete records older than a set number of months</td></tr>
+        <tr><td><strong>Change PIN</strong></td><td>Change the Admin PIN</td></tr>
+        <tr><td><strong>Sync Log</strong></td><td>See which records have been synced to Google Sheets and if any failed</td></tr>
+      </tbody>
+    </table>
+
+    <div class="ss-grid">
+      <div class="ss-img"><img src="screenshots/The Settings page  1.png" alt="Settings — Company Details" /></div>
+      <div class="ss-img"><img src="screenshots/The Settings page  2.png" alt="Settings — API Configuration" /></div>
+      <div class="ss-img"><img src="screenshots/The Settings page  3.png" alt="Settings — Session & Grace Period" /></div>
+      <div class="ss-img"><img src="screenshots/The Settings page  4.png" alt="Settings — Data Management" /></div>
+      <div class="ss-img"><img src="screenshots/The Settings page  5.png" alt="Settings — Sync Log & Retention" /></div>
+    </div>
+    <p class="caption">The Settings page — scroll through all sections: Company Details, API Keys, Timeouts, Backup, Sync Log</p>
+  </section>
+
+  <hr />
+
+  <!-- 16 -->
+  <section id="operators">
+    <div class="ch">
+      <div class="ch-icon">👷</div>
+      <div>
+        <h2>16. Managing Your Staff on the App</h2>
+        <p>Track which staff member created each record — no separate logins needed</p>
+      </div>
+    </div>
+
+    <p>
+      Every time someone opens DispatchFlow, the app asks for their name.
+      This name — called the <strong>operator name</strong> — is stored with every record
+      they create. This way, you always know who made each entry.
+    </p>
+
+    <h3>How It Works Day-to-Day</h3>
+    <ul style="padding-left: 20px; line-height: 2.2;">
+      <li>When a staff member starts their shift, they open the app and type their name</li>
+      <li>Previous names appear as quick-tap buttons — no need to retype every day</li>
+      <li>All records they create that session will show their name</li>
+      <li>When a different person sits down, they click the name shown in the top bar and enter their own name</li>
+    </ul>
+
+    <h3>Using It for Accountability</h3>
+    <p>
+      In the History page, you can filter records by operator name. This lets you see:
+    </p>
+    <ul style="padding-left: 20px; line-height: 2.2;">
+      <li>How many slips each staff member entered today or this week</li>
+      <li>Which records a specific person created</li>
+      <li>If any records are missing (were not entered)</li>
+    </ul>
+
+    <div class="ss-img">
+      <img src="screenshots/the name prompt.png" alt="Operator name modal with previous names as quick-select buttons" />
+    </div>
+    <p class="caption">The name prompt — tap a previous name to select it instantly, or type a new one</p>
+
+    <div class="box box-info">
+      <strong>ℹ️ No Separate Passwords for Staff</strong>
+      Staff members do not need separate passwords or accounts. They just type their name.
+      Only the Settings page needs a PIN (the Admin PIN that only the owner knows).
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 17 -->
+  <section id="pin">
+    <div class="ch">
+      <div class="ch-icon">🔒</div>
+      <div>
+        <h2>17. Keeping the App Safe</h2>
+        <p>The PIN system and auto-lock features explained simply</p>
+      </div>
+    </div>
+
+    <h3>Admin PIN</h3>
+    <p>
+      The Settings page is protected by a 4–8 digit PIN that you chose during setup.
+      Without this PIN, no one can change settings, delete records, or export backups.
+      Only the business owner and trusted senior management should know this PIN.
+    </p>
+
+    <h3>App Auto-Lock</h3>
+    <p>
+      You can set the app to automatically lock after a period of no activity — for example,
+      if a staff member walks away from the computer and leaves it open.
+      When locked, the next person must enter the operator name to continue.
+      This does NOT require the Admin PIN.
+    </p>
+
+    <h3>Recommended Security Settings for a Factory</h3>
+    <table>
+      <thead><tr><th>Setting</th><th>Recommended Value</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Admin PIN</td><td>6 digits, known only to owner</td><td>Prevents staff from changing settings</td></tr>
+        <tr><td>App Auto-Lock</td><td>30 minutes</td><td>Locks if left unattended at shift change</td></tr>
+        <tr><td>Admin Session Timeout</td><td>15 minutes</td><td>Auto-locks Settings even if you forget</td></tr>
+        <tr><td>Edit Window (Grace Period)</td><td>30 minutes</td><td>Allows corrections within the same shift</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr />
+
+  <!-- 18 -->
+  <section id="templates">
+    <div class="ch">
+      <div class="ch-icon">📐</div>
+      <div>
+        <h2>18. Ready-Made Templates for Your Industry</h2>
+        <p>Start with a pre-built form that already has the right fields for your business</p>
+      </div>
+    </div>
+
+    <p>
+      During setup you chose an industry template. Here is what each template includes
+      so you know what to expect on your form:
+    </p>
+
+    <table>
+      <thead><tr><th>Template</th><th>Fields Included on the Dispatch Form</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>🧵 Textile / Garment</td>
+          <td>Slip No, Date, Customer Name, Roll Count, Fabric Type, Colour, Design/Article No, Quantity (meters), Vehicle No, Remarks</td>
+        </tr>
+        <tr>
+          <td>💊 Pharma</td>
+          <td>Slip No, Date, Consignee, Product Name, Batch No, Manufacturing Date, Expiry Date, Quantity, Cold Chain Required, Vehicle No, Remarks</td>
+        </tr>
+        <tr>
+          <td>⚙️ Engineering</td>
+          <td>Slip No, Date, Customer, Part Name, Part No, Drawing No, Material Grade, Heat/Lot No, Quantity, Unit, Vehicle No, Remarks</td>
+        </tr>
+        <tr>
+          <td>🍱 Food &amp; Packaging</td>
+          <td>Slip No, Date, Buyer, Product Name, Batch No, Best Before Date, Storage Temperature, Quantity, Vehicle No, Remarks</td>
+        </tr>
+        <tr>
+          <td>📦 General</td>
+          <td>Slip No, Date, Party Name, Description, Quantity, Unit, Vehicle No, Remarks — add your own fields from here</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box box-tip">
+      <strong>✅ You Can Change These Anytime</strong>
+      Go to Settings → Form Fields to add, remove, or rearrange the fields at any time.
+      You do not have to start over — just edit the fields and save.
+    </div>
+  </section>
+
+
+  <!-- ══════════ PART 5 ══════════ -->
+
+  <!-- 19 -->
+  <section id="faq">
+    <div class="ch">
+      <div class="ch-icon">❓</div>
+      <div>
+        <h2>19. Common Questions</h2>
+        <p>Things business owners and staff often ask</p>
+      </div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">Do I need internet to use the app every day?</div>
+      <div class="fa">No. After setup, the app works completely without internet.
+      If you have Google Sheets connected, it will sync the new records to your sheet
+      as soon as internet is available. But data entry, scanning, and searching all
+      work without any internet connection.</div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">What if the computer is reset or replaced?</div>
+      <div class="fa">If the computer is reset without a backup, the records stored inside the
+      browser will be lost. This is why weekly backups are so important (Section 14).
+      With a recent backup file, you can restore all records on any new computer within minutes.
+      If you have Google Sheets sync enabled, your data is also safely stored there.</div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">Can I use this on my phone or tablet?</div>
+      <div class="fa">Yes. Open the app address in Google Chrome on your phone.
+      Everything works the same — including the camera scanning using your phone's
+      rear camera. The design is made for touch screens with large, easy-to-tap buttons.</div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">What if the app fills in wrong information from the slip?</div>
+      <div class="fa">Simply click on that field and type the correct value.
+      The orange-highlighted fields show you which ones the app filled — those are
+      the ones to check. For the best accuracy, make sure the slip is well-lit,
+      flat, and the camera is directly above (not at an angle).</div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">Can multiple staff members use the same computer?</div>
+      <div class="fa">Yes. Each person just enters their name at the start of their session.
+      All records from all staff are stored together and searchable.
+      You can filter by name to see one person's records.</div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">Is there any monthly charge to use DispatchFlow?</div>
+      <div class="fa">No. DispatchFlow itself is free. The Google Gemini AI key (which reads your slips)
+      has a free usage limit that is more than enough for most small businesses.
+      Google Sheets is also free. The only cost is your internet connection and the computer you already have.</div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">Can I use it for invoices as well as dispatch slips?</div>
+      <div class="fa">Yes. DispatchFlow handles both. The invoice screen even handles multi-item invoices —
+      it reads every product line on the invoice and extracts them all separately.
+      Invoices and dispatch slips are stored and searchable separately.</div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">What languages does it read?</div>
+      <div class="fa">DispatchFlow reads English, Hindi (Devanagari script), and Marathi.
+      It can handle slips that mix languages — very common in Indian factory environments.
+      Even handwritten text added in Hindi on a printed slip will be read correctly.</div>
+    </div>
+
+    <div class="faq">
+      <div class="fq">I forgot my Admin PIN. What do I do?</div>
+      <div class="fa">Contact your IT person. Resetting the PIN requires clearing the app's stored data —
+      which will also delete all records. This is why keeping a weekly backup is so important.
+      With a backup, you can reset the app and restore all your records immediately.</div>
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 20 -->
+  <section id="problems">
+    <div class="ch">
+      <div class="ch-icon">🔧</div>
+      <div>
+        <h2>20. Something Not Working?</h2>
+        <p>Common problems and simple solutions — no technical steps required</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Problem You See</th><th>What It Means</th><th>What to Do</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>The app does not open in the browser</td>
+          <td>The app is not running yet</td>
+          <td>Double-click the startup shortcut on the desktop. Wait 30 seconds. Try opening the browser again.</td>
+        </tr>
+        <tr>
+          <td>Scanning works but the form does not fill</td>
+          <td>The AI key is not entered or has expired</td>
+          <td>Go to Settings → enter your Gemini API Key. Click "Test" to confirm it works.</td>
+        </tr>
+        <tr>
+          <td>Camera does not start, or shows a black screen</td>
+          <td>Browser has not been given camera permission</td>
+          <td>Look for a camera or lock icon in the browser's address bar. Click it and choose "Allow" for camera.</td>
+        </tr>
+        <tr>
+          <td>Sync icon shows red in the top bar</td>
+          <td>Records are not reaching Google Sheets</td>
+          <td>Check your internet connection. Go to Settings → check the Google connection is still working. Call your IT person if it continues.</td>
+        </tr>
+        <tr>
+          <td>Records are missing</td>
+          <td>Browser data was cleared</td>
+          <td>Go to Settings → Import from Backup → select your most recent backup file.</td>
+        </tr>
+        <tr>
+          <td>Printed slip shows no company name or logo</td>
+          <td>Company details were not saved</td>
+          <td>Go to Settings → Company Details → fill in your name, GST, and logo → click Save.</td>
+        </tr>
+        <tr>
+          <td>First scan is very slow (5+ minutes)</td>
+          <td>Language files downloading for the first time</td>
+          <td>This only happens once after setup. Wait for it to finish — future scans will be fast.</td>
+        </tr>
+        <tr>
+          <td>Cannot access Settings (PIN not accepted)</td>
+          <td>Wrong PIN entered</td>
+          <td>Try again carefully. If still not working, contact your IT person. Do NOT attempt to reset without a backup.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box box-tip">
+      <strong>✅ The Golden Rule for Any Problem</strong>
+      Before calling IT support — try closing the browser and reopening the app.
+      Most minor issues are fixed by a simple restart. If the problem continues after
+      restarting, then contact your IT person.
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 21 -->
+  <section id="words">
+    <div class="ch">
+      <div class="ch-icon">📖</div>
+      <div>
+        <h2>21. Simple Explanations of App Words</h2>
+        <p>Every unfamiliar word or phrase explained in plain language</p>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>Word You See in the App</th><th>What It Actually Means</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>OCR</strong></td>
+          <td>The technology that reads text from a photo — like how your eye reads a printed page, but done by the computer. Stands for Optical Character Recognition — but you never need to remember that.</td>
+        </tr>
+        <tr>
+          <td><strong>AI / Gemini</strong></td>
+          <td>Google's artificial intelligence. It looks at the text read from your slip and figures out which word goes in which field — like a very fast and clever assistant.</td>
+        </tr>
+        <tr>
+          <td><strong>Operator</strong></td>
+          <td>The person using the app. Just your name — so records show who created each entry.</td>
+        </tr>
+        <tr>
+          <td><strong>Admin PIN</strong></td>
+          <td>A 4–8 digit number that protects the Settings area. Like the password to a safe — only the owner should know it.</td>
+        </tr>
+        <tr>
+          <td><strong>Sync</strong></td>
+          <td>Sending your records automatically to Google Sheets in the background. The green/amber/red dot in the top bar shows if this is working.</td>
+        </tr>
+        <tr>
+          <td><strong>Backup</strong></td>
+          <td>A copy of all your records saved as a single file. Like a photocopy of your entire register that you keep in a different place, in case the original is damaged.</td>
+        </tr>
+        <tr>
+          <td><strong>Restore</strong></td>
+          <td>Loading records back from a backup file. Like opening that photocopy and putting the information back.</td>
+        </tr>
+        <tr>
+          <td><strong>Grace Period / Edit Window</strong></td>
+          <td>The time window after saving a record when you can still change it. After this window closes, the record is locked and cannot be changed.</td>
+        </tr>
+        <tr>
+          <td><strong>Schema / Template</strong></td>
+          <td>The list of fields on your form. Choosing a template is like picking a pre-printed form that already has the right columns for your business.</td>
+        </tr>
+        <tr>
+          <td><strong>API Key</strong></td>
+          <td>A secret code from Google that gives DispatchFlow permission to use Google's AI. Like a key to a room — once you have it and put it in, the door stays open.</td>
+        </tr>
+        <tr>
+          <td><strong>CSV / Export</strong></td>
+          <td>Downloading all your records as a file that opens in Microsoft Excel or Google Sheets. Useful for monthly reports or sharing with your accountant.</td>
+        </tr>
+        <tr>
+          <td><strong>Sync Log</strong></td>
+          <td>A history of every time the app tried to send records to Google Sheets — showing which ones succeeded and which failed. Like a delivery receipt book.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr />
+
+  <!-- 22 -->
+  <section id="checklist">
+    <div class="ch">
+      <div class="ch-icon">✅</div>
+      <div>
+        <h2>22. Setup Checklist</h2>
+        <p>Print this page, tick off each step as it is completed</p>
+      </div>
+    </div>
+
+    <h3>One-Time Setup (IT Person Does These)</h3>
+    <ul class="cl">
+      <li><div class="cb"></div><span>IT person installs the reading engine on the computer (ocr-backend setup)</span></li>
+      <li><div class="cb"></div><span>IT person installs and starts the web app (ocr-frontend setup)</span></li>
+      <li><div class="cb"></div><span>IT person creates a desktop shortcut for daily startup</span></li>
+      <li><div class="cb"></div><span>IT person confirms the app opens at the correct address in the browser</span></li>
+    </ul>
+
+    <h3 style="margin-top: 32px;">First-Time Setup Wizard (Business Owner Does These)</h3>
+    <ul class="cl">
+      <li><div class="cb"></div><span>Step 1: Enter company name, GST number, and address</span></li>
+      <li><div class="cb"></div><span>Step 1: Upload company logo (optional)</span></li>
+      <li><div class="cb"></div><span>Step 1: Choose and write down the Admin PIN</span></li>
+      <li><div class="cb"></div><span>Step 2: Choose the industry template that matches your business</span></li>
+      <li><div class="cb"></div><span>Step 3: Adjust form fields to match your paper slip</span></li>
+      <li><div class="cb"></div><span>Step 4: Enter Gemini API Key (from Google AI Studio, free)</span></li>
+      <li><div class="cb"></div><span>Test: Scan one paper slip and check the form fills correctly</span></li>
+    </ul>
+
+    <h3 style="margin-top: 32px;">Google Sheets Setup (Optional, IT Person Helps)</h3>
+    <ul class="cl">
+      <li><div class="cb"></div><span>Create a new Google Sheet for dispatch records</span></li>
+      <li><div class="cb"></div><span>IT person sets up the Apps Script connection (code is provided inside the app)</span></li>
+      <li><div class="cb"></div><span>Enter the Google Sheet link and API key in Settings</span></li>
+      <li><div class="cb"></div><span>Test the connection — green tick should appear</span></li>
+      <li><div class="cb"></div><span>Save one test dispatch record and confirm it appears in the Google Sheet</span></li>
+    </ul>
+
+    <h3 style="margin-top: 32px;">Every Day</h3>
+    <ul class="cl">
+      <li><div class="cb"></div><span>Double-click the startup shortcut on the desktop</span></li>
+      <li><div class="cb"></div><span>Open the app in Chrome</span></li>
+      <li><div class="cb"></div><span>Enter your name when prompted</span></li>
+      <li><div class="cb"></div><span>Scan dispatch slips as goods are dispatched</span></li>
+      <li><div class="cb"></div><span>Check the sync dot is green (records are reaching Google Sheets)</span></li>
+    </ul>
+
+    <h3 style="margin-top: 32px;">Every Week (Monday Morning)</h3>
+    <ul class="cl">
+      <li><div class="cb"></div><span>Click "Download Backup" when the reminder appears on the home screen</span></li>
+      <li><div class="cb"></div><span>Save the backup file to a USB drive or email it to yourself</span></li>
+      <li><div class="cb"></div><span>Download the records as Excel (CSV Export) for your accountant if needed</span></li>
+    </ul>
+  </section>
+
+
+  <!-- FOOTER -->
+  <div style="text-align:center; padding: 48px 0 24px; color: var(--muted); font-size: 14px; border-top: 2px solid var(--border); margin-top: 20px;">
+    <div style="font-size: 40px; margin-bottom: 10px;">📦</div>
+    <div style="font-weight: 900; font-size: 20px; color: var(--primary); letter-spacing: -0.5px;">DispatchFlow</div>
+    <div style="margin-top: 6px;">Business Guide &amp; Setup Manual</div>
+    <div style="margin-top: 16px; color: var(--border);">─────────────────────────────</div>
+    <div style="margin-top: 16px; max-width: 480px; margin-left: auto; margin-right: auto;">
+      For technical support, ask your IT person to refer to the
+      README file inside the application folder.
+    </div>
+    <div style="margin-top: 10px;">Made for Indian MSMEs &nbsp;·&nbsp; April 2026</div>
+  </div>
+
+</div>
+</body>
+</html>

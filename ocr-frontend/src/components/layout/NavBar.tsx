@@ -10,6 +10,7 @@ const navItems = [
   { to: '/history',           label: 'Dispatch History' },
   { to: '/invoices',          label: 'New Invoice' },
   { to: '/invoices/history',  label: 'Invoice History' },
+  { to: '/refdocs',           label: 'Reference Doc' },
 ]
 
 export function NavBar() {
