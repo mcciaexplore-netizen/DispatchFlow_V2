@@ -85,24 +85,64 @@ export function DispatchHistory() {
       />
 
       {/* Filters */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 bg-surface border border-border rounded-lg p-3">
-        <input
-          className="col-span-2 rounded border border-border bg-bg px-3 py-2 text-sm font-body text-text focus:outline-none focus:border-accent min-h-touch"
-          placeholder="Search by slip no or any field value…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-        <select
-          className="rounded border border-border bg-bg px-2 py-2 text-sm font-body text-text focus:outline-none focus:border-accent min-h-touch"
-          value={operator}
-          onChange={e => setOperator(e.target.value)}
-        >
-          <option value="">All operators</option>
-          {operators.map(op => <option key={op} value={op}>{op}</option>)}
-        </select>
-        <div className="flex gap-1">
-          <input type="date" className="flex-1 rounded border border-border bg-bg px-2 py-2 text-xs font-body text-text focus:outline-none focus:border-accent min-h-touch" value={dateFrom} onChange={e => setDateFrom(e.target.value)} title="From date" />
-          <input type="date" className="flex-1 rounded border border-border bg-bg px-2 py-2 text-xs font-body text-text focus:outline-none focus:border-accent min-h-touch" value={dateTo}   onChange={e => setDateTo(e.target.value)}   title="To date" />
+      <div className="bg-surface border border-border rounded-lg p-3 flex flex-col gap-2">
+        {/* Search */}
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm select-none">🔍</span>
+          <input
+            className="w-full rounded border border-border bg-bg pl-9 pr-3 py-2 text-sm font-body text-text focus:outline-none focus:border-accent min-h-touch"
+            placeholder="Search by slip no or any field value…"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+
+        {/* Operator + Date range row */}
+        <div className="flex flex-wrap gap-2 items-end">
+          {/* Operator */}
+          <div className="flex flex-col gap-1 flex-1 min-w-[140px]">
+            <label className="text-[10px] font-semibold uppercase tracking-widest text-muted pl-0.5">Operator</label>
+            <select
+              className="rounded border border-border bg-bg px-3 py-2 text-sm font-body text-text focus:outline-none focus:border-accent min-h-touch"
+              value={operator}
+              onChange={e => setOperator(e.target.value)}
+            >
+              <option value="">All operators</option>
+              {operators.map(op => <option key={op} value={op}>{op}</option>)}
+            </select>
+          </div>
+
+          {/* Date range */}
+          <div className="flex items-end gap-0 rounded border border-border bg-bg overflow-hidden divide-x divide-border">
+            <div className="flex flex-col gap-1 px-3 py-1.5">
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted">From</label>
+              <input
+                type="date"
+                className="bg-transparent text-sm font-body text-text focus:outline-none w-[130px]"
+                value={dateFrom}
+                onChange={e => setDateFrom(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col gap-1 px-3 py-1.5">
+              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted">To</label>
+              <input
+                type="date"
+                className="bg-transparent text-sm font-body text-text focus:outline-none w-[130px]"
+                value={dateTo}
+                onChange={e => setDateTo(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Clear button — only when filters are active */}
+          {(search || operator || dateFrom || dateTo) && (
+            <button
+              onClick={() => { setSearch(''); setOperator(''); setDateFrom(''); setDateTo('') }}
+              className="px-3 py-2 text-xs text-muted hover:text-danger border border-border rounded bg-bg hover:border-danger/40 transition-colors min-h-touch whitespace-nowrap"
+            >
+              ✕ Clear
+            </button>
+          )}
         </div>
       </div>
 
