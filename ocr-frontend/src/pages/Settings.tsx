@@ -29,11 +29,17 @@ const APPS_SCRIPT_CODE = `function doPost(e) {
   try {
     var ss   = SpreadsheetApp.getActiveSpreadsheet();
     var data = JSON.parse(e.postData.contents);
-    if (data.payload._test) return ContentService.createTextOutput("ok");
-    var tab  = data.recordType === 'invoice' ? 'Invoices' : 'Dispatch';
+
+    // Test ping from Settings page
+    if (data.payload && data.payload._test) {
+      return ContentService.createTextOutput("ok");
+    }
+
+    var tab   = data.recordType === 'invoice' ? 'Invoices' : 'Dispatch';
     var sheet = ss.getSheetByName(tab);
+
+    // Create sheet tab if it doesn't exist yet
     if (!sheet) {
-      // If default "Sheet1" exists and is blank, rename it instead of creating a new tab
       var sheet1 = ss.getSheetByName('Sheet1');
       if (sheet1 && sheet1.getLastRow() === 0) {
         sheet1.setName(tab);
@@ -42,12 +48,48 @@ const APPS_SCRIPT_CODE = `function doPost(e) {
         sheet = ss.insertSheet(tab);
       }
     }
-    var payload = data.payload;
+
+    var payload    = data.payload;
+    var slipNumber = payload.slipNumber || '';
+
+    // ── First-ever row: write headers then data and exit ──────────────────
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(Object.keys(payload));
+      sheet.appendRow(Object.values(payload));
+      return ContentService.createTextOutput("ok");
     }
-    sheet.appendRow(Object.values(payload));
+
+    // ── Get existing headers from row 1 ───────────────────────────────────
+    var lastCol = sheet.getLastColumn();
+    var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+
+    // Add any new field keys from payload that aren't in the header row yet
+    Object.keys(payload).forEach(function(key) {
+      if (headers.indexOf(key) === -1) {
+        headers.push(key);
+        sheet.getRange(1, headers.length).setValue(key);
+      }
+    });
+
+    // Build the row values aligned to the header order
+    var rowValues = headers.map(function(h) {
+      return payload[h] !== undefined ? payload[h] : '';
+    });
+
+    // ── Upsert: update existing row if slipNumber found, else append ───────
+    if (slipNumber) {
+      // TextFinder is fast even on large sheets — avoids loading all values
+      var found = sheet.createTextFinder(slipNumber).matchEntireCell(true).findNext();
+      if (found) {
+        sheet.getRange(found.getRow(), 1, 1, headers.length).setValues([rowValues]);
+        return ContentService.createTextOutput("ok");
+      }
+    }
+
+    // New record — append a fresh row
+    sheet.appendRow(rowValues);
     return ContentService.createTextOutput("ok");
+
   } catch(err) {
     return ContentService.createTextOutput("error: " + err.toString());
   }

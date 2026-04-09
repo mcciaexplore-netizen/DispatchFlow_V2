@@ -74,8 +74,8 @@ function getConfig(): string | null {
   } catch { return null }
 }
 
-// ── Process entire queue ───────────────────────────────────────────────────
-export async function runSyncWorker(): Promise<void> {
+// ── Process entire queue (internal) ───────────────────────────────────────
+async function _runSyncWorker(): Promise<void> {
   const appsScriptUrl = getConfig()
   if (!appsScriptUrl) {
     await refreshSyncStatus()
@@ -120,14 +120,41 @@ export async function runSyncWorker(): Promise<void> {
   await refreshSyncStatus()
 }
 
-// ── Enqueue a new record ───────────────────────────────────────────────────
+// ── Public wrapper: uses Web Locks so only one tab syncs at a time ─────────
+export async function runSyncWorker(): Promise<void> {
+  if (typeof navigator !== 'undefined' && navigator.locks) {
+    await navigator.locks.request('dispatchflow-sync', { ifAvailable: true }, async (lock) => {
+      if (!lock) return // Another tab holds the lock — skip this round
+      await _runSyncWorker()
+    })
+  } else {
+    await _runSyncWorker()
+  }
+}
+
+// ── Enqueue a new record (upsert — prevents duplicate queue entries) ────────
 export async function enqueueRecord(entry: Omit<SyncQueueEntry, 'id' | 'retryCount' | 'lastAttempted' | 'status'>) {
-  await db.syncQueue.add({
-    ...entry,
-    retryCount: 0,
-    lastAttempted: null,
-    status: 'pending',
-  })
+  const existing = await db.syncQueue
+    .where('recordId').equals(entry.recordId)
+    .filter(e => e.status === 'pending' || e.status === 'failed')
+    .first()
+
+  if (existing) {
+    // Same record already waiting — overwrite payload and reset retries
+    await db.syncQueue.update(existing.id!, {
+      payload: entry.payload,
+      status: 'pending',
+      retryCount: 0,
+      lastAttempted: null,
+    })
+  } else {
+    await db.syncQueue.add({
+      ...entry,
+      retryCount: 0,
+      lastAttempted: null,
+      status: 'pending',
+    })
+  }
   // Trigger immediate sync attempt
   runSyncWorker().catch(console.error)
 }
