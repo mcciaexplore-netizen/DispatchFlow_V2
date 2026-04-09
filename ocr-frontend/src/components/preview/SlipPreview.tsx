@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { Button } from '../ui/Button'
+import { exportToCsv } from '../../lib/csvExport'
 import type { SchemaField, SystemFields, CompanyConfig } from '../../types'
 
 interface Props {
@@ -65,6 +66,11 @@ const printStyles = `
 export function SlipPreview({ slipId, fields, payload, system, company, kind }: Props) {
   const printRef = useRef<HTMLDivElement>(null)
   const docLabel = kind === 'dispatch' ? 'Dispatch Slip' : 'Invoice'
+
+  const handleExportCsv = () => {
+    const data = [{ ...payload, slipNumber: slipId, createdAt: system.createdAt, createdBy: system.createdBy, schemaVersion: system.schemaVersion }]
+    exportToCsv(data, fields, `${slipId}_${system.createdAt.slice(0, 10)}.csv`)
+  }
 
   const handlePrint = () => {
     const win = window.open('', '_blank', 'width=850,height=700')
@@ -149,10 +155,11 @@ export function SlipPreview({ slipId, fields, payload, system, company, kind }: 
         </div>
       </div>
 
-      {/* Print button */}
-      <Button variant="secondary" size="md" onClick={handlePrint} className="self-end no-print">
-        Print / Export PDF
-      </Button>
+      {/* Action buttons */}
+      <div className="flex gap-2 self-end no-print">
+        <Button variant="secondary" size="md" onClick={handleExportCsv}>↓ CSV</Button>
+        <Button variant="secondary" size="md" onClick={handlePrint}>Print / Export PDF</Button>
+      </div>
     </div>
   )
 }

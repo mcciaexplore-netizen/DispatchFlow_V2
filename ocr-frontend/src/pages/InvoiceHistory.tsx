@@ -139,9 +139,24 @@ export function InvoiceHistory() {
                   {previewFields.map(f => record.payload[f.key] ? `${f.label}: ${record.payload[f.key]}` : null).filter(Boolean).join(' · ')}
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-0.5 flex-shrink-0 ml-4">
-                <span className="text-xs text-muted">{new Date(record.createdAt).toLocaleDateString('en-IN')}</span>
-                <span className="text-xs text-muted">{record.createdBy}</span>
+              <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                <div className="flex flex-col items-end gap-0.5">
+                  <span className="text-xs text-muted">{new Date(record.createdAt).toLocaleDateString('en-IN')}</span>
+                  <span className="text-xs text-muted">{record.createdBy}</span>
+                </div>
+                <button
+                  onClick={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    exportToCsv(
+                      [{ ...record.payload, slipNumber: record.slipNumber, createdAt: record.createdAt, createdBy: record.createdBy, schemaVersion: record.schemaVersion }],
+                      fields,
+                      `${record.slipNumber}_${record.createdAt.slice(0, 10)}.csv`
+                    )
+                  }}
+                  className="px-2 py-1 text-xs text-muted hover:text-accent border border-border rounded bg-bg hover:border-accent/40 transition-colors"
+                  title="Download CSV"
+                >↓ CSV</button>
               </div>
             </Link>
           ))}

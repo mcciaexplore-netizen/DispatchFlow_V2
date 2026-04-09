@@ -8,6 +8,7 @@ import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { SectionHeader, Card, Divider } from '../components/ui/Card'
 import { getCompany, getSessionConfig } from '../lib/config'
+import { exportToCsv } from '../lib/csvExport'
 
 function isEditable(createdAt: string, graceMins: number): boolean {
   if (graceMins === 0) return true
@@ -42,6 +43,11 @@ export function InvoiceDetail() {
   const canEdit = isEditable(record.createdAt, sessionConfig.gracePeriodMinutes)
   const fields = archivedFields ?? currentFields
 
+  const handleExportCsv = () => {
+    const data = [{ ...record.payload, slipNumber: record.slipNumber, createdAt: record.createdAt, createdBy: record.createdBy, schemaVersion: record.schemaVersion }]
+    exportToCsv(data, fields, `${record.slipNumber}_${record.createdAt.slice(0, 10)}.csv`)
+  }
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-6">
       <SectionHeader
@@ -49,6 +55,7 @@ export function InvoiceDetail() {
         subtitle={`Created ${new Date(record.createdAt).toLocaleString('en-IN')} by ${record.createdBy}`}
         action={
           <div className="flex gap-2">
+            <Button variant="secondary" size="sm" onClick={handleExportCsv}>↓ CSV</Button>
             {canEdit && <Button variant="secondary" size="sm" onClick={() => navigate(`/invoices/${record.slipNumber}`)}>✏ Edit</Button>}
             <Button variant="ghost" size="sm" onClick={() => navigate('/invoices/history')}>← History</Button>
           </div>
