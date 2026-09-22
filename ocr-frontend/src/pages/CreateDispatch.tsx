@@ -86,36 +86,6 @@ export function CreateDispatch() {
           </div>
           <p className="text-xs sm:text-sm text-muted mt-1">Capture gate passes, delivery challans, and transport slips with autonomous OCR parsing</p>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            setOcrResult({
-              status: 'success',
-              data: {
-                party_name: 'Tata Motors Component Div',
-                buyer_name: 'Tata Motors Component Div',
-                destination: 'Pune MIDC, Bhosari',
-                item_description: 'Precision CNC Machined Shafts 45mm',
-                part_name_no: 'SHAFT-CNC-45X',
-                part_number: 'SHAFT-CNC-45X',
-                quantity: '500',
-                gross_weight: '350',
-                net_weight: '320',
-                roll_count: '10',
-                vehicle_no: 'MH-12-RN-4821',
-                driver_name: 'Suresh Patil',
-                dispatch_date: new Date().toLocaleDateString('en-IN'),
-                remarks: 'Demo scan test - All parameters OK',
-              },
-              missingRequired: [],
-              modelUsed: 'Demo Preset',
-              rawResponse: 'Sample Data',
-            });
-          }}
-          className="text-xs px-3.5 py-2 bg-primary/10 border border-primary/25 text-primary hover:bg-primary/20 rounded-xl font-bold transition-all shadow-2xs flex items-center gap-1.5 self-start sm:self-auto"
-        >
-          <span>📝</span> Fill Sample Dispatch
-        </button>
       </div>
 
       <Card padding="md" className="rounded-3xl">

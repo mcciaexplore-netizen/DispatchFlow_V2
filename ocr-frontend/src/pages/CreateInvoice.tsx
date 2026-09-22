@@ -152,42 +152,6 @@ export function CreateInvoice() {
               : 'Scan paper invoice or input line items to generate compliant e-way ready records'}
           </p>
         </div>
-        {!isEditMode && (
-          <button
-            type="button"
-            onClick={() => {
-              setOcrResult({
-                status: 'success',
-                data: {
-                  party_name: 'Bajaj Auto Ltd Components',
-                  gst_number: '27AABCB2018A1Z2',
-                  invoice_no: 'INV-DEMO-2026',
-                  invoice_date: new Date().toLocaleDateString('en-IN'),
-                  item_description: 'Precision Hydraulic Brake Units',
-                  hsn_sac_code: '8708',
-                  quantity: '120',
-                  unit: 'pcs',
-                  rate: '1850',
-                  taxable_amount: '222000',
-                  cgst: '19980',
-                  sgst: '19980',
-                  igst: '0',
-                  total_amount: '261960',
-                  bank_name: 'State Bank of India',
-                  account_no: '38291048201',
-                  ifsc_code: 'SBIN0001423',
-                  remarks: 'Delivery to Akurdi Plant - Inspection Passed',
-                },
-                missingRequired: [],
-                modelUsed: 'Demo Preset',
-                rawResponse: 'Sample Invoice Data Loaded',
-              });
-            }}
-            className="text-xs px-3.5 py-2 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 rounded-xl font-bold transition-all shadow-2xs flex items-center gap-1.5 self-start sm:self-auto"
-          >
-            <span>📝</span> Fill Sample Invoice
-          </button>
-        )}
       </div>
 
       {!locked && (

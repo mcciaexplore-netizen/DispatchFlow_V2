@@ -32,39 +32,39 @@ export function Dashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
       {/* Enterprise Header Hero Banner */}
-      <div className="relative overflow-hidden rounded-3xl glass-card border border-border/80 p-6 sm:p-8">
-        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 -mb-8 w-48 h-48 bg-accent/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="relative overflow-hidden rounded-3xl glass-card border border-white/80 p-6 sm:p-9 shadow-xl bg-gradient-to-r from-white/95 via-white/80 to-primary/5">
+        <div className="absolute -top-12 -right-12 w-72 h-72 bg-gradient-to-br from-primary/20 to-accent/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-12 right-1/3 w-56 h-56 bg-accent/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-start sm:items-center gap-5">
-            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-gradient-to-br from-white to-primary/5 border border-primary/20 flex items-center justify-center p-3 shadow-md flex-shrink-0">
+            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-gradient-to-br from-white to-slate-50 border border-primary/20 flex items-center justify-center p-3 shadow-lg flex-shrink-0 group hover:scale-105 transition-transform duration-300 glow-primary">
               {company.logoBase64 ? (
                 <img src={company.logoBase64} alt="logo" className="h-full w-full object-contain" />
               ) : (
-                <img src="/mccia-logo.svg" alt="MCCIA logo" className="h-full w-full object-contain" />
+                <img src="/mccia-logo-transparent.png" alt="MCCIA logo" className="h-full w-full object-contain" />
               )}
             </div>
             <div>
-              <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-black text-text tracking-tight">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-black text-text tracking-tight bg-gradient-to-r from-slate-900 via-primary to-slate-800 bg-clip-text text-transparent">
                   {company.name || 'MCCIA Enterprise Hub'}
                 </h1>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/10 text-accent border border-accent/20">
-                  <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
-                  Live System
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-2xs">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Live Operational
                 </span>
               </div>
               {company.gst ? (
-                <p className="text-xs font-mono text-muted mt-1 flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-bg border border-border">GSTIN</span>
-                  <span className="font-semibold text-text">{company.gst}</span>
+                <p className="text-xs font-mono text-muted mt-1.5 flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-lg bg-slate-100 font-bold text-slate-600 border border-border">GSTIN</span>
+                  <span className="font-semibold text-text tracking-wide">{company.gst}</span>
                 </p>
               ) : (
-                <p className="text-xs sm:text-sm text-muted mt-1 font-body">
-                  Mahratta Chamber of Commerce, Industries and Agriculture — Autonomous MSME Automation
+                <p className="text-xs sm:text-sm text-muted mt-1.5 font-medium max-w-xl leading-relaxed">
+                  Mahratta Chamber of Commerce, Industries and Agriculture — Autonomous MSME Automation Portal
                 </p>
               )}
             </div>
@@ -75,16 +75,16 @@ export function Dashboard() {
               variant="secondary"
               size="md"
               onClick={() => navigate('/settings')}
-              className="rounded-xl shadow-xs hover:shadow-md border-border/80"
+              className="rounded-xl shadow-xs hover:shadow-md border-border/80 font-bold"
             >
               <span>⚙</span>
-              <span>Configuration</span>
+              <span>Settings</span>
             </Button>
             <Button
               variant="primary"
               size="md"
               onClick={() => navigate('/create')}
-              className="rounded-xl shadow-md glow-primary font-bold"
+              className="rounded-xl shadow-lg glow-primary font-bold"
             >
               <span>+ Quick Scan</span>
             </Button>

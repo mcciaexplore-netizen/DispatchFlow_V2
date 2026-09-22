@@ -438,7 +438,7 @@ export function OnboardingWizard() {
         {/* Header with MCCIA Logo */}
         <div className="mb-8 text-center flex flex-col items-center">
           <div className="flex items-center justify-center gap-3 mb-3 bg-surface px-5 py-3 rounded-2xl border border-border/80 shadow-sm">
-            <img src="/mccia-logo.svg" alt="MCCIA" className="h-12 w-auto object-contain" />
+            <img src="/mccia-logo-transparent.png" alt="MCCIA" className="h-10 w-auto object-contain" />
             <div className="h-8 w-px bg-border mx-1" />
             <div className="flex flex-col text-left">
               <span className="text-xl font-heading font-extrabold text-primary tracking-tight leading-tight">

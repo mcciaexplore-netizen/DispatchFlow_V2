@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "puppeteer-core": "^24.40.0"
+  },
+  "dependencies": {
+    "build": "^0.1.4"
   }
 }

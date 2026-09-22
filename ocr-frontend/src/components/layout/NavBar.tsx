@@ -14,8 +14,14 @@ const navItems = [
 ]
 
 export function NavBar() {
-  const { currentOperator } = useSessionStore()
+  const { currentOperator, logout } = useSessionStore()
   const company = getCompany()
+
+  const handleSwitchAccount = () => {
+    localStorage.removeItem(LS.LAST_OPERATOR_SESSION)
+    logout()
+    window.location.reload()
+  }
 
 
   return (
@@ -29,7 +35,7 @@ export function NavBar() {
               {company.logoBase64 ? (
                 <img src={company.logoBase64} alt="Company Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
               ) : (
-                <img src="/mccia-logo.svg" alt="MCCIA Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
+                <img src="/mccia-logo-transparent.png" alt="MCCIA Logo" className="h-7 sm:h-8 w-auto object-contain transition-transform group-hover:scale-105" />
               )}
             </div>
             <div className="flex flex-col">
@@ -47,23 +53,10 @@ export function NavBar() {
           <div className="flex items-center gap-2 sm:gap-3">
             <SyncIndicator />
 
-            {/* Demo data quick loader */}
-            <button
-              onClick={async () => {
-                const { populateDemoData } = await import('../../lib/demoData')
-                await populateDemoData()
-                window.location.reload()
-              }}
-              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 hover:border-accent/50 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs active:scale-95"
-              title="Load sample MCCIA dispatches & invoices"
-            >
-              <span className="text-sm">⚡</span> Load Demo Data
-            </button>
-
             {/* Operator session badge */}
             {currentOperator && (
-              <div className="flex items-center gap-1.5 text-xs text-muted bg-surface/80 px-2.5 py-1 rounded-xl border border-border shadow-2xs">
-                <span className="w-5 h-5 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">
+              <div className="flex items-center gap-2 text-xs text-muted bg-surface/90 px-3 py-1.5 rounded-xl border border-border/80 shadow-2xs">
+                <span className="w-5 h-5 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-[10px] font-extrabold">
                   {currentOperator[0]?.toUpperCase()}
                 </span>
                 <span className="hidden lg:inline font-semibold text-text">{currentOperator}</span>
@@ -72,24 +65,21 @@ export function NavBar() {
 
             {/* Switch user */}
             <button
-              onClick={() => {
-                localStorage.removeItem(LS.LAST_OPERATOR_SESSION)
-                window.location.reload()
-              }}
-              className="text-xs text-muted hover:text-text px-2.5 py-1.5 rounded-lg border border-transparent hover:border-border hover:bg-surface transition-all min-h-touch flex items-center gap-1"
-              title="Switch operator"
+              onClick={handleSwitchAccount}
+              className="text-xs font-semibold text-muted hover:text-text px-3 py-1.5 rounded-xl border border-transparent hover:border-border hover:bg-surface transition-all min-h-touch flex items-center gap-1.5"
+              title="Switch operator / Log out"
             >
-              <span>⇄</span>
-              <span className="hidden sm:inline">Switch</span>
+              <span className="text-sm">⇄</span>
+              <span className="hidden sm:inline">Sign Out</span>
             </button>
 
             {/* Settings Link */}
             <NavLink 
               to="/settings" 
               className={({ isActive }) =>
-                `text-xs px-3 py-1.5 rounded-xl transition-all min-h-touch flex items-center gap-1.5 font-semibold ${
+                `text-xs px-3.5 py-1.5 rounded-xl transition-all min-h-touch flex items-center gap-1.5 font-bold ${
                   isActive
-                    ? 'bg-primary text-white shadow-xs'
+                    ? 'bg-primary text-white shadow-sm glow-primary'
                     : 'text-muted hover:text-text hover:bg-surface border border-transparent hover:border-border'
                 }`
               }
@@ -101,20 +91,20 @@ export function NavBar() {
         </div>
 
         {/* Navigation Tabs */}
-        <nav className="flex gap-1.5 overflow-x-auto -mb-px pb-1 pt-0.5 scrollbar-none">
+        <nav className="flex gap-1.5 overflow-x-auto -mb-px pb-1 pt-1 scrollbar-none">
           {navItems.map(item => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.to === '/'}
               className={({ isActive }) => [
-                'px-3.5 py-2 text-xs sm:text-sm font-body font-semibold whitespace-nowrap rounded-xl transition-all flex items-center gap-1.5',
+                'px-4 py-2 text-xs sm:text-sm font-body font-semibold whitespace-nowrap rounded-xl transition-all flex items-center gap-2',
                 isActive
-                  ? 'bg-primary/10 text-primary border border-primary/20 shadow-2xs font-bold'
+                  ? 'bg-primary/10 text-primary border border-primary/20 shadow-2xs font-bold ring-2 ring-primary/10'
                   : 'text-muted hover:text-text hover:bg-surface border border-transparent',
               ].join(' ')}
             >
-              <span className="text-xs">{item.icon}</span>
+              <span className="text-sm">{item.icon}</span>
               <span>{item.label}</span>
             </NavLink>
           ))}

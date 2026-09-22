@@ -105,7 +105,7 @@ export function SlipPreview({ slipId, fields, payload, system, company, kind }: 
               {company.logoBase64 ? (
                 <img src={company.logoBase64} alt="logo" className="company-logo" />
               ) : (
-                <img src="/mccia-logo.svg" alt="MCCIA logo" className="company-logo" />
+                <img src="/mccia-logo-transparent.png" alt="MCCIA logo" className="company-logo" />
               )}
               <div>
                 <div className="company-name">{company.name}</div>
