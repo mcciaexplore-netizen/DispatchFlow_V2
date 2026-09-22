@@ -1,6 +1,6 @@
 import { type ButtonHTMLAttributes, forwardRef } from 'react'
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
+type Variant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'danger'
 type Size    = 'sm' | 'md' | 'lg'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -10,16 +10,17 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary:   'bg-primary text-white hover:bg-primary-hover shadow-sm active:scale-[0.98] font-semibold',
-  secondary: 'bg-surface border border-border text-text hover:bg-bg active:scale-[0.98]',
-  ghost:     'bg-transparent text-muted hover:text-text hover:bg-border/40 active:scale-[0.98]',
-  danger:    'bg-danger text-white hover:bg-danger/90 shadow-sm active:scale-[0.98] font-semibold',
+  primary:   'bg-primary text-white hover:bg-primary-hover shadow-xs hover:shadow-md active:scale-[0.98] font-bold border border-primary/20 glow-primary',
+  secondary: 'bg-surface border border-border text-text hover:bg-bg hover:border-border-hover active:scale-[0.98] font-semibold shadow-2xs',
+  accent:    'bg-accent text-white hover:bg-accent-hover shadow-xs hover:shadow-md active:scale-[0.98] font-bold border border-accent/20 glow-accent',
+  ghost:     'bg-transparent text-muted hover:text-text hover:bg-surface border border-transparent hover:border-border active:scale-[0.98] font-semibold',
+  danger:    'bg-danger text-white hover:bg-danger/90 shadow-xs hover:shadow-md active:scale-[0.98] font-bold border border-danger/20',
 }
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'px-3 py-1.5 text-sm min-h-[36px]',
-  md: 'px-4 py-2 text-base min-h-[44px]',
-  lg: 'px-6 py-3 text-lg min-h-[52px]',
+  sm: 'px-3 py-1.5 text-xs min-h-[36px] rounded-lg',
+  md: 'px-4 py-2 text-sm min-h-[42px] rounded-xl',
+  lg: 'px-6 py-3 text-base min-h-[50px] rounded-xl',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -28,9 +29,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       disabled={disabled || loading}
       className={[
-        'inline-flex items-center justify-center gap-2 rounded transition-all duration-150',
-        'select-none focus-visible:outline-2 focus-visible:outline-accent',
-        'disabled:opacity-40 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer',
+        'select-none focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2',
+        'disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none',
         variantClasses[variant],
         sizeClasses[size],
         className,
@@ -48,3 +49,4 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   )
 )
 Button.displayName = 'Button'
+

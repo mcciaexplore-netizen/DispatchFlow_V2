@@ -5,7 +5,10 @@ import { getSchema } from '../lib/schema'
 import { exportToCsv } from '../lib/csvExport'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
-import { SectionHeader, EmptyState } from '../components/ui/Card'
+import { EmptyState } from '../components/ui/Card'
+
+
+
 
 interface DispatchHistoryItem {
   id: number
@@ -88,42 +91,47 @@ export function DispatchHistory() {
   const previewFields = fields.slice(0, 2)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-4">
-      <SectionHeader
-        title="Dispatch History"
-        subtitle={`${filtered.length} of ${allRecords?.length ?? 0} records${visibleCount < filtered.length ? ` (showing ${visibleCount})` : ''}`}
-        action={
-          <div className="flex gap-2">
-            <Button variant="secondary" size="sm" onClick={handleExport} disabled={!filtered?.length}>
-              ↓ CSV
-            </Button>
-            <Button variant="primary" size="sm" onClick={() => navigate('/create')}>
-              + New slip
-            </Button>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 sm:p-6 rounded-3xl border border-border/80">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-primary" />
+            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-text">Dispatch History</h1>
           </div>
-        }
-      />
+          <p className="text-xs sm:text-sm text-muted mt-1">
+            {filtered.length} of {allRecords?.length ?? 0} total records recorded in enterprise database
+          </p>
+        </div>
+        <div className="flex items-center gap-2.5 self-start sm:self-auto">
+          <Button variant="secondary" size="md" onClick={handleExport} disabled={!filtered?.length} className="rounded-xl shadow-2xs font-semibold">
+            ↓ Export CSV
+          </Button>
+          <Button variant="primary" size="md" onClick={() => navigate('/create')} className="rounded-xl shadow-xs font-bold">
+            + New Dispatch
+          </Button>
+        </div>
+      </div>
 
-      {/* Filters */}
-      <div className="bg-surface border border-border rounded-lg p-3 flex flex-col gap-2">
+      {/* Filters Bar */}
+      <div className="glass-card rounded-2xl border border-border/80 p-4 sm:p-5 flex flex-col gap-3.5 shadow-2xs">
         {/* Search */}
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted text-sm select-none">🔍</span>
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-base select-none">🔍</span>
           <input
-            className="w-full rounded border border-border bg-bg pl-9 pr-3 py-2 text-sm font-body text-text focus:outline-none focus:border-accent min-h-touch"
-            placeholder="Search by slip no or any field value…"
+            className="w-full rounded-xl border border-border bg-surface pl-10 pr-4 py-2.5 text-sm font-body text-text focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[42px] placeholder:text-muted/40 transition-all shadow-2xs"
+            placeholder="Search by slip ID, consignment party, destination, or vehicle number…"
             value={search}
             onChange={e => { setSearch(e.target.value); setVisibleCount(50) }}
           />
         </div>
 
         {/* Operator + Date range row */}
-        <div className="flex flex-wrap gap-2 items-end">
-          {/* Operator */}
-          <div className="flex flex-col gap-1 flex-1 min-w-[140px]">
-            <label className="text-[10px] font-semibold uppercase tracking-widest text-muted pl-0.5">Operator</label>
+        <div className="flex flex-wrap gap-3 items-end">
+          {/* Operator Filter */}
+          <div className="flex flex-col gap-1 flex-1 min-w-[160px]">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-muted pl-0.5">Operator Filter</label>
             <select
-              className="rounded border border-border bg-bg px-3 py-2 text-sm font-body text-text focus:outline-none focus:border-accent min-h-touch"
+              className="rounded-xl border border-border bg-surface px-3 py-2 text-xs sm:text-sm font-body text-text focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[40px] transition-all shadow-2xs"
               value={operator}
               onChange={e => { setOperator(e.target.value); setVisibleCount(50) }}
             >
@@ -133,79 +141,88 @@ export function DispatchHistory() {
           </div>
 
           {/* Date range */}
-          <div className="flex items-end gap-0 rounded border border-border bg-bg overflow-hidden divide-x divide-border">
+          <div className="flex items-end rounded-xl border border-border bg-surface overflow-hidden divide-x divide-border shadow-2xs">
             <div className="flex flex-col gap-1 px-3 py-1.5">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted">From</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">From Date</label>
               <input
                 type="date"
-                className="bg-transparent text-sm font-body text-text focus:outline-none w-[130px]"
+                className="bg-transparent text-xs sm:text-sm font-body text-text focus:outline-none"
                 value={dateFrom}
                 onChange={e => { setDateFrom(e.target.value); setVisibleCount(50) }}
               />
             </div>
             <div className="flex flex-col gap-1 px-3 py-1.5">
-              <label className="text-[10px] font-semibold uppercase tracking-widest text-muted">To</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted">To Date</label>
               <input
                 type="date"
-                className="bg-transparent text-sm font-body text-text focus:outline-none w-[130px]"
+                className="bg-transparent text-xs sm:text-sm font-body text-text focus:outline-none"
                 value={dateTo}
                 onChange={e => { setDateTo(e.target.value); setVisibleCount(50) }}
               />
             </div>
           </div>
 
-          {/* Clear button — only when filters are active */}
+          {/* Clear button */}
           {(search || operator || dateFrom || dateTo) && (
             <button
               onClick={() => { setSearch(''); setOperator(''); setDateFrom(''); setDateTo(''); setVisibleCount(50) }}
-              className="px-3 py-2 text-xs text-muted hover:text-danger border border-border rounded bg-bg hover:border-danger/40 transition-colors min-h-touch whitespace-nowrap"
+              className="px-3.5 py-2 text-xs font-bold text-danger hover:bg-danger/10 border border-danger/30 rounded-xl bg-surface transition-all min-h-[40px] whitespace-nowrap"
             >
-              ✕ Clear
+              ✕ Clear Filters
             </button>
           )}
         </div>
       </div>
 
-      {/* Records */}
+      {/* Records List */}
       {!allRecords ? (
-        <div className="text-center py-12 text-muted">Loading…</div>
+        <div className="text-center py-16 text-muted font-medium">Loading ledger records…</div>
       ) : filtered.length === 0 ? (
         <EmptyState
           icon="📋"
           title="No dispatch slips found"
-          description={search || operator || dateFrom || dateTo ? 'Try adjusting the filters.' : 'Create your first dispatch slip.'}
-          action={<Button variant="primary" onClick={() => navigate('/create')}>+ New dispatch slip</Button>}
+          description={search || operator || dateFrom || dateTo ? 'No matching slips match the selected criteria. Try adjusting the filters.' : 'Create your first dispatch slip to start the audit ledger.'}
+          action={<Button variant="primary" onClick={() => navigate('/create')}>+ New Dispatch Slip</Button>}
         />
       ) : (
-        <div className="flex flex-col row-stagger">
+        <div className="flex flex-col gap-3 row-stagger">
           {visible.map((record: DispatchHistoryItem) => (
             <Link
               key={record.id}
               to={`/history/${record.slipNumber}`}
-              className="flex items-center justify-between px-4 py-3 border border-border rounded-lg bg-surface hover:border-accent/50 hover:bg-bg transition-colors card-lift"
+              className="group flex items-center justify-between p-4 sm:p-5 border border-border/80 rounded-2xl glass-card hover:border-primary/50 transition-all card-lift"
             >
-              <div className="flex flex-col gap-0.5 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-sm font-medium text-text">{record.slipNumber}</span>
-                  <Badge variant={record.status === 'delivered' ? 'success' : 'accent'}>{record.status}</Badge>
+              <div className="flex flex-col gap-1 min-w-0">
+                <div className="flex items-center gap-2.5">
+                  <span className="font-mono text-sm font-bold text-text group-hover:text-primary transition-colors">{record.slipNumber}</span>
+                  <Badge variant={record.status === 'delivered' ? 'success' : 'primary'} dot>
+                    {record.status || 'Active'}
+                  </Badge>
                   {record.editedWithin && <Badge variant="accent">edited</Badge>}
                 </div>
-                <div className="text-xs text-muted truncate">
-                  {previewFields.map(f => record.payload[f.key] ? `${f.label}: ${record.payload[f.key]}` : null).filter(Boolean).join(' · ')}
+                <div className="text-xs text-muted truncate mt-0.5">
+                  {previewFields.map(f => record.payload[f.key] ? `${f.label}: ${record.payload[f.key]}` : null).filter(Boolean).join(' · ') || 'No item payload preview'}
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-0.5 flex-shrink-0 ml-4">
-                <span className="text-xs text-muted">{new Date(record.createdAt).toLocaleDateString('en-IN')}</span>
-                <span className="text-xs text-muted">{record.createdBy}</span>
+              <div className="flex items-center gap-4 flex-shrink-0 ml-4">
+                <div className="flex flex-col items-end gap-0.5">
+                  <span className="text-xs font-mono font-semibold text-text bg-bg px-2.5 py-1 rounded-lg border border-border">
+                    {new Date(record.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </span>
+                  <span className="text-[11px] text-muted">{record.createdBy}</span>
+                </div>
+                <span className="text-muted group-hover:text-primary group-hover:translate-x-1 transition-all text-lg">
+                  ›
+                </span>
               </div>
             </Link>
           ))}
           {visibleCount < filtered.length && (
             <button
               onClick={() => setVisibleCount(c => c + 50)}
-              className="mx-auto mt-3 px-6 py-2 text-sm text-accent hover:text-text border border-border rounded-lg bg-surface hover:bg-bg transition-colors"
+              className="mx-auto mt-4 px-6 py-2.5 text-xs font-bold text-primary hover:text-white hover:bg-primary border border-primary/30 rounded-xl bg-surface transition-all shadow-2xs"
             >
-              Load more ({filtered.length - visibleCount} remaining)
+              Load more records ({filtered.length - visibleCount} remaining)
             </button>
           )}
         </div>

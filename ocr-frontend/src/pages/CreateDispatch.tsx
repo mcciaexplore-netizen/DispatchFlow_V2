@@ -3,7 +3,8 @@ import { useState, useMemo, useRef } from 'react'
 import { ScanZone } from '../components/scanner/ScanZone'
 import { DynamicForm } from '../components/forms/DynamicForm'
 import { SlipPreview } from '../components/preview/SlipPreview'
-import { Card, SectionHeader, Divider } from '../components/ui/Card'
+import { Card, Divider } from '../components/ui/Card'
+
 import { getSchema } from '../lib/schema'
 import { getCompany } from '../lib/config'
 import { api } from '../lib/api'
@@ -76,12 +77,15 @@ export function CreateDispatch() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-5">
-      <div className="flex items-center justify-between">
-        <SectionHeader
-          title="New Dispatch Slip"
-          subtitle="Fill manually or scan an existing slip image"
-        />
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 sm:p-6 rounded-3xl border border-border/80">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-primary" />
+            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-text">New Dispatch Slip</h1>
+          </div>
+          <p className="text-xs sm:text-sm text-muted mt-1">Capture gate passes, delivery challans, and transport slips with autonomous OCR parsing</p>
+        </div>
         <button
           type="button"
           onClick={() => {
@@ -108,16 +112,20 @@ export function CreateDispatch() {
               rawResponse: 'Sample Data',
             });
           }}
-          className="text-xs px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 rounded font-medium transition-colors flex items-center gap-1"
+          className="text-xs px-3.5 py-2 bg-primary/10 border border-primary/25 text-primary hover:bg-primary/20 rounded-xl font-bold transition-all shadow-2xs flex items-center gap-1.5 self-start sm:self-auto"
         >
-          <span>📝</span> Fill Demo Data
+          <span>📝</span> Fill Sample Dispatch
         </button>
       </div>
 
-      <Card>
-        <h3 className="text-base font-heading text-text mb-3">Scan document</h3>
+      <Card padding="md" className="rounded-3xl">
+        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/80">
+          <span className="text-primary text-base">📷</span>
+          <h3 className="text-sm font-heading font-bold text-text uppercase tracking-wider">Step 1: Document OCR Scan</h3>
+        </div>
         <ScanZone fields={fields} onResult={setOcrResult} />
       </Card>
+
 
       <Divider />
 

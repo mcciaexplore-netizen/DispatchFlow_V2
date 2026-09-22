@@ -9,14 +9,14 @@ import { Button } from '../components/ui/Button'
 import { getCompany, hasAppsScript } from '../lib/config'
 
 export function Dashboard() {
-  const navigate    = useNavigate()
+  const navigate = useNavigate()
   const { status, pendingCount } = useSyncStore()
-  const company     = useMemo(() => getCompany(), [])
+  const company = useMemo(() => getCompany(), [])
 
   const [pendingBackup, setPendingBackup] = useState(isPendingBackup())
-  const [exporting,     setExporting]     = useState(false)
-  const [retentionDue,  setRetentionDue]  = useState(getRetentionDueCount())
-  const [sweeping,      setSweeping]      = useState(false)
+  const [exporting, setExporting] = useState(false)
+  const [retentionDue, setRetentionDue] = useState(getRetentionDueCount())
+  const [sweeping, setSweeping] = useState(false)
 
   const recentDispatch = useLiveQuery(() => db.dispatch.orderBy('createdAt').reverse().limit(5).toArray(), [])
   const recentInvoice  = useLiveQuery(() => db.invoice.orderBy('createdAt').reverse().limit(5).toArray(), [])
@@ -32,73 +32,117 @@ export function Dashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-5">
-      {/* Header with MCCIA branding */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface p-5 sm:p-6 rounded-2xl border border-border/80 shadow-xs">
-        <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-xl bg-primary/5 border border-primary/20 flex items-center justify-center p-2 flex-shrink-0">
-            {company.logoBase64 ? (
-              <img src={company.logoBase64} alt="logo" className="h-full w-full object-contain" />
-            ) : (
-              <img src="/mccia-logo.svg" alt="MCCIA logo" className="h-full w-full object-contain" />
-            )}
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-heading font-extrabold text-text">
-                {company.name || 'MCCIA Enterprise Hub'}
-              </h1>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
-                Active
-              </span>
-            </div>
-            {company.gst ? (
-              <p className="text-xs font-mono text-muted mt-0.5">GSTIN: {company.gst}</p>
-            ) : (
-              <p className="text-xs text-muted mt-0.5 font-body">Mahratta Chamber of Commerce, Industries and Agriculture — MSME Portal</p>
-            )}
-          </div>
-        </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+      {/* Enterprise Header Hero Banner */}
+      <div className="relative overflow-hidden rounded-3xl glass-card border border-border/80 p-6 sm:p-8">
+        <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 -mb-8 w-48 h-48 bg-accent/10 rounded-full blur-2xl pointer-events-none" />
 
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <Button variant="secondary" size="sm" onClick={() => navigate('/settings')} className="gap-1.5 text-xs">
-            ⚙ Settings
-          </Button>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex items-start sm:items-center gap-5">
+            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-gradient-to-br from-white to-primary/5 border border-primary/20 flex items-center justify-center p-3 shadow-md flex-shrink-0">
+              {company.logoBase64 ? (
+                <img src={company.logoBase64} alt="logo" className="h-full w-full object-contain" />
+              ) : (
+                <img src="/mccia-logo.svg" alt="MCCIA logo" className="h-full w-full object-contain" />
+              )}
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-black text-text tracking-tight">
+                  {company.name || 'MCCIA Enterprise Hub'}
+                </h1>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/10 text-accent border border-accent/20">
+                  <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
+                  Live System
+                </span>
+              </div>
+              {company.gst ? (
+                <p className="text-xs font-mono text-muted mt-1 flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded bg-bg border border-border">GSTIN</span>
+                  <span className="font-semibold text-text">{company.gst}</span>
+                </p>
+              ) : (
+                <p className="text-xs sm:text-sm text-muted mt-1 font-body">
+                  Mahratta Chamber of Commerce, Industries and Agriculture — Autonomous MSME Automation
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 self-start md:self-auto flex-shrink-0">
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/settings')}
+              className="rounded-xl shadow-xs hover:shadow-md border-border/80"
+            >
+              <span>⚙</span>
+              <span>Configuration</span>
+            </Button>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => navigate('/create')}
+              className="rounded-xl shadow-md glow-primary font-bold"
+            >
+              <span>+ Quick Scan</span>
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Warning banners */}
+      {/* Warning / Notification Banners */}
       {!hasAppsScript() && (
-        <div className="flex items-start gap-3 px-4 py-3 bg-warning/10 border border-warning/30 rounded-xl shadow-2xs">
-          <span className="text-warning text-lg flex-shrink-0">⚠</span>
+        <div className="flex items-start gap-3.5 px-5 py-4 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 rounded-2xl shadow-xs">
+          <span className="text-amber-500 text-xl flex-shrink-0">⚡</span>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-warning">Cloud sync not configured</p>
-            <p className="text-xs text-warning/90 mt-0.5">Records are stored locally on this device. <Link to="/settings" className="underline font-medium">Configure Google Sheets cloud sync →</Link></p>
+            <p className="text-sm font-bold text-amber-700">Cloud Sync Not Configured</p>
+            <p className="text-xs text-amber-900/80 mt-0.5">
+              All OCR dispatches and invoices are securely stored in your local browser storage. Connect your Google Sheets bridge to enable automatic multi-user syncing.
+            </p>
           </div>
+          <Link
+            to="/settings"
+            className="px-3.5 py-1.5 bg-amber-500 text-white rounded-xl text-xs font-bold hover:bg-amber-600 transition-colors shadow-2xs whitespace-nowrap self-center"
+          >
+            Connect Cloud →
+          </Link>
         </div>
       )}
 
       {pendingBackup && (
-        <div className="flex items-start gap-3 px-4 py-3.5 bg-primary/8 border border-primary/30 rounded-xl shadow-2xs">
-          <span className="text-primary text-xl flex-shrink-0">💾</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-primary">Scheduled Backup Ready</p>
-            <p className="text-xs text-muted mt-0.5">Download a secure local archive of all your dispatch and invoice records.</p>
+        <div className="flex items-start sm:items-center justify-between gap-4 px-5 py-4 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/30 rounded-2xl shadow-xs">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center text-lg flex-shrink-0 shadow-sm">
+              💾
+            </div>
+            <div>
+              <p className="text-sm font-bold text-primary">Scheduled Local Backup Ready</p>
+              <p className="text-xs text-muted mt-0.5">Generate and download an encrypted snapshot of all local dispatch and tax records.</p>
+            </div>
           </div>
           <div className="flex gap-2 flex-shrink-0">
-            <Button variant="primary" size="sm" onClick={handleDownloadBackup} loading={exporting}>Download JSON</Button>
-            <Button variant="ghost"   size="sm" onClick={() => { dismissBackupBanner(); setPendingBackup(false) }}>Later</Button>
+            <Button variant="primary" size="sm" onClick={handleDownloadBackup} loading={exporting} className="rounded-xl">
+              Download JSON
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => { dismissBackupBanner(); setPendingBackup(false) }} className="rounded-xl">
+              Later
+            </Button>
           </div>
         </div>
       )}
 
-      {/* Retention due banner */}
       {retentionDue > 0 && (
-        <div className="flex items-start gap-3 px-4 py-3.5 bg-amber-500/10 border border-amber-500/30 rounded-xl shadow-2xs">
-          <span className="text-amber-600 text-xl flex-shrink-0">🗄</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-text">{retentionDue} record(s) past retention policy</p>
-            <p className="text-xs text-muted mt-0.5">These records are older than your configured retention window. Export and clean them to optimize local storage.</p>
+        <div className="flex items-start sm:items-center justify-between gap-4 px-5 py-4 bg-gradient-to-r from-red-500/10 via-red-500/5 to-transparent border border-red-500/30 rounded-2xl shadow-xs">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-danger text-white flex items-center justify-center text-lg flex-shrink-0 shadow-sm">
+              🗄
+            </div>
+            <div>
+              <p className="text-sm font-bold text-danger">{retentionDue} Record(s) Past Retention Window</p>
+              <p className="text-xs text-muted mt-0.5">Export records older than your configured retention policy to maintain lightning-fast database performance.</p>
+            </div>
           </div>
           <div className="flex gap-2 flex-shrink-0">
             <Button variant="danger" size="sm" loading={sweeping} onClick={async () => {
@@ -109,117 +153,266 @@ export function Dashboard() {
               setRetentionDue(0)
               setSweeping(false)
               alert(`Backup downloaded. ${deleted} old record(s) removed.`)
-            }}>Archive & Clean</Button>
-            <Button variant="ghost" size="sm" onClick={() => { dismissRetentionBanner(); setRetentionDue(0) }}>Dismiss</Button>
+            }} className="rounded-xl">
+              Archive & Sweep
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => { dismissRetentionBanner(); setRetentionDue(0) }} className="rounded-xl">
+              Dismiss
+            </Button>
           </div>
         </div>
       )}
 
-      {/* Sync status banner */}
-      {status === 'failing' && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-danger/10 border border-danger/30 rounded-xl">
-          <span className="w-2.5 h-2.5 rounded-full bg-danger animate-ping flex-shrink-0" />
-          <p className="text-sm text-danger font-medium flex-1">Sync is failing — {pendingCount} record(s) pending retry. <Link to="/settings" className="underline">View sync log →</Link></p>
-        </div>
-      )}
-
-      {/* Quick Action Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <button onClick={() => navigate('/create')}
-          className="group flex items-center gap-4 p-5 bg-gradient-to-r from-surface to-primary/5 border border-border/90 rounded-2xl hover:border-primary/50 transition-all card-lift text-left shadow-xs">
-          <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center text-2xl flex-shrink-0 shadow-md group-hover:scale-110 transition-transform">
-            ⚡
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="font-heading font-bold text-text text-lg group-hover:text-primary transition-colors">
-              New Dispatch Slip
+      {/* Main Action Launchpad */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <button
+          onClick={() => navigate('/create')}
+          className="group relative overflow-hidden p-6 sm:p-7 glass-card rounded-3xl border border-primary/20 hover:border-primary/60 transition-all card-lift text-left text-text"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl group-hover:scale-150 transition-transform" />
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary-hover text-white flex items-center justify-center text-2xl shadow-md group-hover:scale-110 group-hover:rotate-3 transition-transform flex-shrink-0">
+              ⚡
             </div>
-            <div className="text-xs text-muted mt-0.5">Scan physical tags or generate slips with local OCR</div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading font-extrabold text-xl text-text group-hover:text-primary transition-colors">
+                  Create Dispatch Slip
+                </h3>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary uppercase">
+                  Fast Flow
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-muted mt-1 leading-relaxed">
+                Scan physical delivery challans or generate gate pass dispatches with automatic offline OCR parsing.
+              </p>
+              <div className="mt-4 flex items-center gap-2 text-xs font-bold text-primary">
+                <span>Start New Dispatch</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </div>
           </div>
-          <span className="text-muted group-hover:text-primary group-hover:translate-x-1 transition-all text-lg">→</span>
         </button>
 
-        <button onClick={() => navigate('/invoices')}
-          className="group flex items-center gap-4 p-5 bg-gradient-to-r from-surface to-accent/5 border border-border/90 rounded-2xl hover:border-accent/50 transition-all card-lift text-left shadow-xs">
-          <div className="w-12 h-12 rounded-xl bg-accent text-white flex items-center justify-center text-2xl flex-shrink-0 shadow-md group-hover:scale-110 transition-transform">
-            🧾
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="font-heading font-bold text-text text-lg group-hover:text-accent transition-colors">
-              New GST Invoice
+        <button
+          onClick={() => navigate('/invoices')}
+          className="group relative overflow-hidden p-6 sm:p-7 glass-card rounded-3xl border border-accent/20 hover:border-accent/60 transition-all card-lift-accent text-left text-text"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-2xl group-hover:scale-150 transition-transform" />
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent to-accent-hover text-white flex items-center justify-center text-2xl shadow-md group-hover:scale-110 group-hover:-rotate-3 transition-transform flex-shrink-0">
+              🧾
             </div>
-            <div className="text-xs text-muted mt-0.5">Extract line items, tax breakdowns & audit trail</div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading font-extrabold text-xl text-text group-hover:text-accent transition-colors">
+                  Process GST Invoice
+                </h3>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent/10 text-accent uppercase">
+                  AI Extraction
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-muted mt-1 leading-relaxed">
+                Extract multi-line items, calculate HSN tax breakdowns, and generate compliant audit-ready digital invoices.
+              </p>
+              <div className="mt-4 flex items-center gap-2 text-xs font-bold text-accent">
+                <span>Start New Invoice</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </div>
           </div>
-          <span className="text-muted group-hover:text-accent group-hover:translate-x-1 transition-all text-lg">→</span>
         </button>
       </div>
 
-      {/* Stats row */}
-      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+      {/* KPI Stats Widgets */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { label: 'Dispatch Slips', value: dispatchCount ?? '—', link: '/history', icon: '📋', color: 'text-primary' },
-          { label: 'GST Invoices', value: invoiceCount ?? '—', link: '/invoices/history', icon: '🧾', color: 'text-accent' },
-          { label: 'Cloud Sync', value: status === 'synced' ? 'Synced' : status === 'pending' ? `${pendingCount} Queued` : status === 'failing' ? 'Failing' : 'Offline', link: '/settings', icon: '☁', color: status === 'synced' ? 'text-success' : 'text-warning' },
-        ].map(stat => (
-          <Link key={stat.label} to={stat.link}
-            className="flex flex-col gap-1 p-4 bg-surface border border-border/80 rounded-2xl hover:border-primary/40 transition-all card-lift shadow-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted font-semibold uppercase tracking-wider">{stat.label}</span>
-              <span className="text-base">{stat.icon}</span>
+          {
+            title: 'Dispatches Recorded',
+            count: dispatchCount ?? 0,
+            link: '/history',
+            icon: '📋',
+            subtitle: 'Delivery challans in ledger',
+            badge: 'Ledger Active',
+            color: 'text-primary',
+            badgeColor: 'bg-primary/10 text-primary border-primary/20',
+          },
+          {
+            title: 'Invoices Generated',
+            count: invoiceCount ?? 0,
+            link: '/invoices/history',
+            icon: '🧾',
+            subtitle: 'GST audited records',
+            badge: 'Tax Compliant',
+            color: 'text-accent',
+            badgeColor: 'bg-accent/10 text-accent border-accent/20',
+          },
+          {
+            title: 'Cloud Synchronization',
+            count: status === 'synced' ? 'Healthy' : status === 'pending' ? `${pendingCount} Queued` : status === 'failing' ? 'Alert' : 'Offline',
+            link: '/settings',
+            icon: '☁',
+            subtitle: status === 'synced' ? 'All records in sync' : `${pendingCount} pending upload`,
+            badge: status === 'synced' ? '100% Synced' : 'Action Required',
+            color: status === 'synced' ? 'text-success' : 'text-warning',
+            badgeColor: status === 'synced' ? 'bg-success/10 text-success border-success/20' : 'bg-warning/10 text-warning border-warning/20',
+          },
+        ].map(item => (
+          <Link
+            key={item.title}
+            to={item.link}
+            className="group flex flex-col justify-between p-5 rounded-2xl glass-card border border-border/80 hover:border-primary/40 transition-all card-lift"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="w-10 h-10 rounded-xl bg-surface border border-border flex items-center justify-center text-lg shadow-2xs group-hover:scale-105 transition-transform">
+                  {item.icon}
+                </span>
+                <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${item.badgeColor}`}>
+                  {item.badge}
+                </span>
+              </div>
+              <p className="text-xs font-bold uppercase tracking-wider text-muted font-body">
+                {item.title}
+              </p>
+              <p className={`text-3xl font-heading font-black mt-1 ${item.color}`}>
+                {item.count}
+              </p>
             </div>
-            <span className={`text-2xl sm:text-3xl font-heading font-extrabold ${stat.color}`}>{stat.value}</span>
+            <p className="text-xs text-muted/80 mt-3 pt-3 border-t border-border/60">
+              {item.subtitle}
+            </p>
           </Link>
         ))}
       </div>
 
-      {/* Recent activity */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-surface border border-border/80 rounded-2xl p-5 shadow-xs">
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
-            <div className="flex items-center gap-2">
-              <span className="text-primary text-base">📋</span>
-              <h3 className="text-sm font-heading font-bold text-text uppercase tracking-wider">Recent Dispatches</h3>
+      {/* Activity Streams Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Dispatches */}
+        <div className="glass-card rounded-3xl border border-border/80 p-6 flex flex-col shadow-xs">
+          <div className="flex items-center justify-between pb-4 mb-4 border-b border-border/80">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
+                📋
+              </div>
+              <div>
+                <h2 className="text-base font-heading font-bold text-text">Recent Dispatches</h2>
+                <p className="text-xs text-muted">Latest deliveries and gate passes</p>
+              </div>
             </div>
-            <Link to="/history" className="text-xs text-primary font-bold hover:underline">View all →</Link>
+            <Link
+              to="/history"
+              className="text-xs text-primary font-bold hover:text-primary-hover flex items-center gap-1 transition-colors px-3 py-1.5 rounded-lg hover:bg-primary/5"
+            >
+              <span>View All</span>
+              <span>→</span>
+            </Link>
           </div>
+
           {!recentDispatch?.length ? (
-            <p className="text-xs text-muted py-6 text-center">No dispatch slips recorded yet.</p>
+            <div className="py-12 flex flex-col items-center justify-center text-center">
+              <span className="text-3xl mb-2 opacity-30">📋</span>
+              <p className="text-sm font-semibold text-text">No Dispatches Created</p>
+              <p className="text-xs text-muted mt-0.5">Start your first slip to build your dispatch audit trail.</p>
+              <Button size="sm" variant="secondary" onClick={() => navigate('/create')} className="mt-4 rounded-xl">
+                + New Dispatch Slip
+              </Button>
+            </div>
           ) : (
             <div className="flex flex-col row-stagger divide-y divide-border/60">
               {recentDispatch.map((r: DispatchRecord) => (
-                <Link key={r.id} to={`/history/${r.slipNumber}`}
-                  className="flex justify-between items-center py-2.5 hover:text-primary transition-colors group">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-text group-hover:text-primary">{r.slipNumber}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-semibold">Dispatch</span>
+                <Link
+                  key={r.id}
+                  to={`/history/${r.slipNumber}`}
+                  className="flex items-center justify-between py-3 px-2 rounded-xl hover:bg-surface/80 transition-all group"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />
+                    <div className="min-w-0">
+                      <div className="font-mono text-xs font-bold text-text group-hover:text-primary transition-colors truncate">
+                        {r.slipNumber}
+                      </div>
+                      <div className="text-[11px] text-muted truncate">
+                        {r.payload?.party_name || r.payload?.buyer_name || 'Generic Consignment'}
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-xs text-muted font-mono">{new Date(r.createdAt).toLocaleDateString('en-IN')}</span>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <span className="text-xs text-muted font-mono bg-bg px-2 py-0.5 rounded border border-border">
+                      {new Date(r.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                    </span>
+                    <span className="text-muted group-hover:text-primary group-hover:translate-x-0.5 transition-all text-sm">
+                      ›
+                    </span>
+                  </div>
                 </Link>
               ))}
             </div>
           )}
         </div>
 
-        <div className="bg-surface border border-border/80 rounded-2xl p-5 shadow-xs">
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-border">
-            <div className="flex items-center gap-2">
-              <span className="text-accent text-base">🧾</span>
-              <h3 className="text-sm font-heading font-bold text-text uppercase tracking-wider">Recent Invoices</h3>
+        {/* Recent Invoices */}
+        <div className="glass-card rounded-3xl border border-border/80 p-6 flex flex-col shadow-xs">
+          <div className="flex items-center justify-between pb-4 mb-4 border-b border-border/80">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-accent/10 text-accent flex items-center justify-center text-sm font-bold">
+                🧾
+              </div>
+              <div>
+                <h2 className="text-base font-heading font-bold text-text">Recent Invoices</h2>
+                <p className="text-xs text-muted">Latest verified GST tax invoices</p>
+              </div>
             </div>
-            <Link to="/invoices/history" className="text-xs text-accent font-bold hover:underline">View all →</Link>
+            <Link
+              to="/invoices/history"
+              className="text-xs text-accent font-bold hover:text-accent-hover flex items-center gap-1 transition-colors px-3 py-1.5 rounded-lg hover:bg-accent/5"
+            >
+              <span>View All</span>
+              <span>→</span>
+            </Link>
           </div>
+
           {!recentInvoice?.length ? (
-            <p className="text-xs text-muted py-6 text-center">No invoices recorded yet.</p>
+            <div className="py-12 flex flex-col items-center justify-center text-center">
+              <span className="text-3xl mb-2 opacity-30">🧾</span>
+              <p className="text-sm font-semibold text-text">No Invoices Stored</p>
+              <p className="text-xs text-muted mt-0.5">Scan or generate tax invoices to organize your accounts.</p>
+              <Button size="sm" variant="secondary" onClick={() => navigate('/invoices')} className="mt-4 rounded-xl">
+                + New GST Invoice
+              </Button>
+            </div>
           ) : (
             <div className="flex flex-col row-stagger divide-y divide-border/60">
               {recentInvoice.map((r: InvoiceRecord) => (
-                <Link key={r.id} to={`/invoices/history/${r.slipNumber}`}
-                  className="flex justify-between items-center py-2.5 hover:text-accent transition-colors group">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-text group-hover:text-accent">{r.slipNumber}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent font-semibold">Invoice</span>
+                <Link
+                  key={r.id}
+                  to={`/invoices/history/${r.slipNumber}`}
+                  className="flex items-center justify-between py-3 px-2 rounded-xl hover:bg-surface/80 transition-all group"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-2 h-2 rounded-full bg-accent flex-shrink-0" />
+                    <div className="min-w-0">
+                      <div className="font-mono text-xs font-bold text-text group-hover:text-accent transition-colors truncate">
+                        {r.slipNumber}
+                      </div>
+                      <div className="text-[11px] text-muted truncate">
+                        {r.payload?.buyer_name || r.payload?.party_name || 'Standard Invoice'}
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-xs text-muted font-mono">{new Date(r.createdAt).toLocaleDateString('en-IN')}</span>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    {r.payload?.grand_total && (
+                      <span className="text-xs font-mono font-bold text-text">
+                        ₹{Number(r.payload.grand_total).toLocaleString('en-IN')}
+                      </span>
+                    )}
+                    <span className="text-xs text-muted font-mono bg-bg px-2 py-0.5 rounded border border-border">
+                      {new Date(r.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                    </span>
+                    <span className="text-muted group-hover:text-accent group-hover:translate-x-0.5 transition-all text-sm">
+                      ›
+                    </span>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -229,3 +422,4 @@ export function Dashboard() {
     </div>
   )
 }
+

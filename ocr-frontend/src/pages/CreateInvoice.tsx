@@ -4,7 +4,9 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { ScanZone } from '../components/scanner/ScanZone'
 import { DynamicForm } from '../components/forms/DynamicForm'
 import { SlipPreview } from '../components/preview/SlipPreview'
-import { Card, SectionHeader, Divider } from '../components/ui/Card'
+import { Card, Divider } from '../components/ui/Card'
+import { Button } from '../components/ui/Button'
+
 import { getSchema, generateInvoiceId } from '../lib/schema'
 import { enqueueRecord } from '../lib/syncWorker'
 import { useSessionStore } from '../store/sessionStore'
@@ -112,15 +114,22 @@ export function CreateInvoice() {
 
   if (saved) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-5">
-        <div className="flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 sm:p-6 rounded-3xl border border-border/80">
           <div>
-            <div className="text-success font-medium text-sm">✓ Invoice saved</div>
-            <h1 className="text-2xl font-heading text-text">{saved.slipNumber}</h1>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent/10 text-accent border border-accent/20 mb-1">
+              ✓ GST Tax Invoice Saved
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-heading font-black text-text">{saved.slipNumber}</h1>
           </div>
-          <button onClick={() => { setSaved(null); setOcrResult(null) }} className="text-accent underline text-sm min-h-touch flex items-center">
-            + New invoice
-          </button>
+          <Button
+            variant="accent"
+            size="md"
+            onClick={() => { setSaved(null); setOcrResult(null) }}
+            className="rounded-xl font-bold shadow-xs"
+          >
+            + Create Another Invoice
+          </Button>
         </div>
         <SlipPreview slipId={saved.slipNumber} fields={fields} payload={saved.payload} system={saved} company={company} kind="invoice" />
       </div>
@@ -128,12 +137,21 @@ export function CreateInvoice() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-5">
-      <div className="flex items-center justify-between">
-        <SectionHeader
-          title={isEditMode ? `Edit ${existingRecord?.slipNumber}` : 'New Invoice'}
-          subtitle={isEditMode && locked ? 'Edit window closed' : 'Scan an invoice or fill manually'}
-        />
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 sm:p-6 rounded-3xl border border-border/80">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-accent" />
+            <h1 className="text-xl sm:text-2xl font-heading font-extrabold text-text">
+              {isEditMode ? `Edit Invoice: ${existingRecord?.slipNumber}` : 'New GST Tax Invoice'}
+            </h1>
+          </div>
+          <p className="text-xs sm:text-sm text-muted mt-1">
+            {isEditMode && locked 
+              ? 'Edit grace period elapsed — record locked for audit integrity' 
+              : 'Scan paper invoice or input line items to generate compliant e-way ready records'}
+          </p>
+        </div>
         {!isEditMode && (
           <button
             type="button"
@@ -165,24 +183,30 @@ export function CreateInvoice() {
                 rawResponse: 'Sample Invoice Data Loaded',
               });
             }}
-            className="text-xs px-2.5 py-1 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 rounded font-medium transition-colors flex items-center gap-1"
+            className="text-xs px-3.5 py-2 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 rounded-xl font-bold transition-all shadow-2xs flex items-center gap-1.5 self-start sm:self-auto"
           >
-            <span>📝</span> Fill Demo Invoice
+            <span>📝</span> Fill Sample Invoice
           </button>
         )}
       </div>
 
       {!locked && (
-        <Card>
-          <h3 className="text-base font-heading text-text mb-3">Scan document</h3>
+        <Card padding="md" className="rounded-3xl">
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/80">
+            <span className="text-accent text-base">📷</span>
+            <h3 className="text-sm font-heading font-bold text-text uppercase tracking-wider">Step 1: Document OCR Scan</h3>
+          </div>
           <ScanZone fields={fields} onResult={setOcrResult} />
         </Card>
       )}
 
       <Divider />
 
-      <Card>
-        <h3 className="text-base font-heading text-text mb-4">Invoice details</h3>
+      <Card padding="md" className="rounded-3xl">
+        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border/80">
+          <span className="text-accent text-base">🧾</span>
+          <h3 className="text-sm font-heading font-bold text-text uppercase tracking-wider">Step 2: Invoice Particulars & Tax Ledger</h3>
+        </div>
         <DynamicForm fields={fields} ocrResult={ocrResult} initialValues={existingRecord?.payload ?? {}} onSave={handleSave} saving={saving} locked={locked} />
       </Card>
     </div>

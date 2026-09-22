@@ -96,132 +96,143 @@ export function DynamicForm({ fields, ocrResult, initialValues, onSave, saving, 
 
   return (
     <>
-      <form onSubmit={handleSubmit(handleSaveAttempt)} className="flex flex-col gap-4">
-        {fields.map(field => {
-          // Hide per-item fields when we have a multi-item table
-          if (hasMultipleItems && showItems && ITEM_LEVEL_KEYS.has(field.key)) {
-            return null
-          }
+      <form onSubmit={handleSubmit(handleSaveAttempt)} className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {fields.map(field => {
+            // Hide per-item fields when we have a multi-item table
+            if (hasMultipleItems && showItems && ITEM_LEVEL_KEYS.has(field.key)) {
+              return null
+            }
 
-          const isOcrFilled = ocrFilledKeys.has(field.key)
-          const error       = errors[field.key]?.message
+            const isOcrFilled = ocrFilledKeys.has(field.key)
+            const error       = errors[field.key]?.message
 
-          return (
-            <div key={field.key} className="flex flex-col gap-0.5">
-              <label className="text-sm font-medium text-muted font-body">
-                {field.label}
-                {field.required && <span className="text-danger ml-0.5">*</span>}
-              </label>
-              <input
-                type={field.type === 'date' ? 'text' : field.type === 'number' ? 'number' : 'text'}
-                step={field.type === 'number' ? 'any' : undefined}
-                disabled={locked}
-                placeholder={field.type === 'date' ? 'DD/MM/YYYY' : `Enter ${field.label.toLowerCase()}`}
-                {...register(field.key, {
-                  validate: () => true,
-                })}
-                className={[
-                  'w-full rounded border bg-surface px-3 py-2 text-text font-body text-base',
-                  'border-border focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30',
-                  'disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] transition-colors duration-80',
-                  isOcrFilled ? 'ocr-filled border-l-[3px] border-l-accent' : '',
-                  error ? 'border-danger' : '',
-                ].join(' ')}
-              />
-              {error && <p className="text-xs text-danger">{error}</p>}
-            </div>
-          )
-        })}
+            return (
+              <div key={field.key} className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted font-body">
+                  {field.label}
+                  {field.required && <span className="text-danger ml-1">*</span>}
+                </label>
+                <input
+                  type={field.type === 'date' ? 'text' : field.type === 'number' ? 'number' : 'text'}
+                  step={field.type === 'number' ? 'any' : undefined}
+                  disabled={locked}
+                  placeholder={field.type === 'date' ? 'DD/MM/YYYY' : `Enter ${field.label.toLowerCase()}`}
+                  {...register(field.key, {
+                    validate: () => true,
+                  })}
+                  className={[
+                    'w-full rounded-xl border bg-surface px-3.5 py-2.5 text-text font-body text-sm',
+                    'border-border/90 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20',
+                    'disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-bg min-h-[42px] transition-all shadow-2xs placeholder:text-muted/40',
+                    isOcrFilled ? 'ocr-filled border-l-[4px] border-l-accent ring-2 ring-accent/20' : '',
+                    error ? 'border-danger focus:border-danger focus:ring-danger/20' : '',
+                  ].join(' ')}
+                />
+                {error && <p className="text-xs text-danger font-medium">{error}</p>}
+              </div>
+            )
+          })}
+        </div>
 
         {/* Multi-item line items table */}
         {hasMultipleItems && showItems && (
-          <div className="flex flex-col gap-3 border border-accent/30 bg-accent/5 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="text-sm font-heading font-medium text-text">
-                  {lineItems.length} Line Items Detected
-                </h4>
-                <p className="text-xs text-muted">OCR detected multiple items. Edit values below if needed.</p>
+          <div className="flex flex-col gap-3.5 border border-accent/30 bg-accent/5 rounded-2xl p-5 shadow-xs">
+            <div className="flex items-center justify-between pb-3 border-b border-accent/20">
+              <div className="flex items-center gap-2">
+                <span className="w-7 h-7 rounded-lg bg-accent text-white flex items-center justify-center text-xs font-bold shadow-2xs">
+                  {lineItems.length}
+                </span>
+                <div>
+                  <h4 className="text-sm font-heading font-extrabold text-text">
+                    Multi-Line Items Detected
+                  </h4>
+                  <p className="text-xs text-muted">Auto-parsed individual items with quantity and unit rates.</p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowItems(false)}
-                className="text-xs text-muted underline"
+                className="text-xs text-muted hover:text-text underline"
               >
-                Show as single fields instead
+                Switch to Single Item View
               </button>
             </div>
 
-            {lineItems.map((item, idx) => (
-              <div key={idx} className="bg-surface border border-border rounded-md p-3 flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-accent">Item {idx + 1}</span>
-                  {!locked && (
-                    <button
-                      type="button"
-                      onClick={() => removeLineItem(idx)}
-                      className="text-xs text-danger hover:underline"
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
+            <div className="flex flex-col gap-3">
+              {lineItems.map((item, idx) => (
+                <div key={idx} className="bg-surface border border-border/90 rounded-xl p-4 flex flex-col gap-3 shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-md bg-accent/10 text-accent uppercase tracking-wider">
+                      Item #{idx + 1}
+                    </span>
+                    {!locked && (
+                      <button
+                        type="button"
+                        onClick={() => removeLineItem(idx)}
+                        className="text-xs text-danger hover:underline font-semibold"
+                      >
+                        ✕ Remove
+                      </button>
+                    )}
+                  </div>
 
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs text-muted">Description</label>
-                  <input
-                    type="text"
-                    value={item.item_name}
-                    onChange={e => updateLineItem(idx, 'item_name', e.target.value)}
-                    disabled={locked}
-                    className="w-full rounded border border-border bg-surface px-2 py-1.5 text-sm text-text min-h-[36px]"
-                  />
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted">Item Description</label>
+                    <input
+                      type="text"
+                      value={item.item_name}
+                      onChange={e => updateLineItem(idx, 'item_name', e.target.value)}
+                      disabled={locked}
+                      className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-text focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[38px]"
+                    />
+                  </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs text-muted">Qty</label>
-                    <input
-                      type="text"
-                      value={item.quantity}
-                      onChange={e => updateLineItem(idx, 'quantity', e.target.value)}
-                      disabled={locked}
-                      className="w-full rounded border border-border bg-surface px-2 py-1.5 text-sm text-text min-h-[36px]"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs text-muted">Unit</label>
-                    <input
-                      type="text"
-                      value={item.unit}
-                      onChange={e => updateLineItem(idx, 'unit', e.target.value)}
-                      disabled={locked}
-                      className="w-full rounded border border-border bg-surface px-2 py-1.5 text-sm text-text min-h-[36px]"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs text-muted">Rate</label>
-                    <input
-                      type="text"
-                      value={item.rate}
-                      onChange={e => updateLineItem(idx, 'rate', e.target.value)}
-                      disabled={locked}
-                      className="w-full rounded border border-border bg-surface px-2 py-1.5 text-sm text-text min-h-[36px]"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs text-muted">Total</label>
-                    <input
-                      type="text"
-                      value={item.total_amount}
-                      onChange={e => updateLineItem(idx, 'total_amount', e.target.value)}
-                      disabled={locked}
-                      className="w-full rounded border border-border bg-surface px-2 py-1.5 text-sm text-text min-h-[36px]"
-                    />
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted">Qty</label>
+                      <input
+                        type="text"
+                        value={item.quantity}
+                        onChange={e => updateLineItem(idx, 'quantity', e.target.value)}
+                        disabled={locked}
+                        className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-text focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[38px]"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted">Unit</label>
+                      <input
+                        type="text"
+                        value={item.unit}
+                        onChange={e => updateLineItem(idx, 'unit', e.target.value)}
+                        disabled={locked}
+                        className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-text focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[38px]"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted">Rate (₹)</label>
+                      <input
+                        type="text"
+                        value={item.rate}
+                        onChange={e => updateLineItem(idx, 'rate', e.target.value)}
+                        disabled={locked}
+                        className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-text focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[38px]"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted">Total (₹)</label>
+                      <input
+                        type="text"
+                        value={item.total_amount}
+                        onChange={e => updateLineItem(idx, 'total_amount', e.target.value)}
+                        disabled={locked}
+                        className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-text focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 min-h-[38px] font-semibold font-mono"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
@@ -230,20 +241,22 @@ export function DynamicForm({ fields, ocrResult, initialValues, onSave, saving, 
           <button
             type="button"
             onClick={() => setShowItems(true)}
-            className="text-sm text-accent underline text-left"
+            className="text-xs font-bold text-accent hover:underline text-left px-3 py-2 bg-accent/10 rounded-xl border border-accent/20 flex items-center gap-2"
           >
-            Show {lineItems.length} detected line items
+            <span>📦</span> Show {lineItems.length} detected multi-line items
           </button>
         )}
 
         {locked ? (
-          <p className="text-sm text-muted bg-bg border border-border rounded px-3 py-2">
-            Edit window closed — this record can no longer be modified.
-          </p>
+          <div className="text-xs text-muted bg-surface border border-border rounded-xl px-4 py-3 font-semibold flex items-center gap-2">
+            <span>🔒</span> Edit window closed — this record can no longer be modified.
+          </div>
         ) : (
-          <Button type="submit" variant="primary" size="lg" loading={saving} className="self-end mt-2">
-            Save record
-          </Button>
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <Button type="submit" variant="primary" size="lg" loading={saving} className="shadow-md rounded-xl font-bold px-8">
+              ✓ Save Record & Generate Slip
+            </Button>
+          </div>
         )}
       </form>
 

@@ -5,107 +5,117 @@ import { getCompany } from '../../lib/config'
 import { LS } from '../../constants/storage'
 
 const navItems = [
-  { to: '/',                  label: 'Dashboard' },
-  { to: '/create',            label: 'New Dispatch' },
-  { to: '/history',           label: 'Dispatch History' },
-  { to: '/invoices',          label: 'New Invoice' },
-  { to: '/invoices/history',  label: 'Invoice History' },
-  { to: '/refdocs',           label: 'Reference Doc' },
+  { to: '/',                  label: 'Dashboard', icon: '📊' },
+  { to: '/create',            label: 'New Dispatch', icon: '⚡' },
+  { to: '/history',           label: 'Dispatch History', icon: '📋' },
+  { to: '/invoices',          label: 'New Invoice', icon: '🧾' },
+  { to: '/invoices/history',  label: 'Invoice History', icon: '📂' },
+  { to: '/refdocs',           label: 'Reference Docs', icon: '📖' },
 ]
 
 export function NavBar() {
   const { currentOperator } = useSessionStore()
-  const company    = getCompany()
+  const company = getCompany()
+
 
   return (
-    <header className="sticky top-0 z-40 bg-surface/95 backdrop-blur-md border-b border-border shadow-xs no-print">
+    <header className="sticky top-0 z-40 glass-nav no-print">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Top bar */}
-        <div className="flex items-center justify-between h-14">
-          {/* Logo/name */}
-          <NavLink to="/" className="flex items-center gap-3 no-underline group">
-            {company.logoBase64 ? (
-              <img src={company.logoBase64} alt="Company Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
-            ) : (
-              <img src="/mccia-logo.svg" alt="MCCIA Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
-            )}
+        <div className="flex items-center justify-between h-16">
+          {/* Brand Identity */}
+          <NavLink to="/" className="flex items-center gap-3.5 no-underline group">
+            <div className="relative p-1.5 rounded-xl bg-gradient-to-br from-white to-primary/5 border border-primary/20 shadow-xs group-hover:border-primary/50 group-hover:shadow-md transition-all">
+              {company.logoBase64 ? (
+                <img src={company.logoBase64} alt="Company Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
+              ) : (
+                <img src="/mccia-logo.svg" alt="MCCIA Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
+              )}
+            </div>
             <div className="flex flex-col">
-              <span className="font-heading font-extrabold text-base text-primary leading-tight tracking-tight">
+              <span className="font-heading font-black text-base sm:text-lg bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent leading-tight tracking-tight">
                 {company.name || 'MCCIA DispatchFlow'}
               </span>
-              <span className="text-[10px] text-muted font-semibold tracking-wide">
-                MSME Smart OCR Hub
+              <span className="text-[10px] text-muted font-bold tracking-wider uppercase flex items-center gap-1">
+                <span>Enterprise OCR Hub</span>
+                <span className="inline-block w-1 h-1 rounded-full bg-accent animate-pulse" />
               </span>
             </div>
           </NavLink>
 
-          {/* Right side */}
-          <div className="flex items-center gap-2.5">
+          {/* Right side actions */}
+          <div className="flex items-center gap-2 sm:gap-3">
             <SyncIndicator />
 
-            {/* Demo badge & quick loader */}
+            {/* Demo data quick loader */}
             <button
               onClick={async () => {
                 const { populateDemoData } = await import('../../lib/demoData')
                 await populateDemoData()
                 window.location.reload()
               }}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 rounded-full text-xs font-bold transition-all shadow-2xs"
+              className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 bg-accent/10 border border-accent/30 text-accent hover:bg-accent/20 hover:border-accent/50 rounded-xl text-xs font-bold transition-all shadow-2xs hover:shadow-xs active:scale-95"
               title="Load sample MCCIA dispatches & invoices"
             >
-              <span>⚡</span> Load Demo Data
+              <span className="text-sm">⚡</span> Load Demo Data
             </button>
 
-            {/* Operator session */}
+            {/* Operator session badge */}
             {currentOperator && (
-              <div className="flex items-center gap-1.5 text-xs text-muted bg-bg px-2.5 py-1 rounded-full border border-border">
-                <span className="w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[9px] font-bold">
+              <div className="flex items-center gap-1.5 text-xs text-muted bg-surface/80 px-2.5 py-1 rounded-xl border border-border shadow-2xs">
+                <span className="w-5 h-5 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-[10px] font-bold">
                   {currentOperator[0]?.toUpperCase()}
                 </span>
-                <span className="hidden sm:inline font-medium text-text">{currentOperator}</span>
+                <span className="hidden lg:inline font-semibold text-text">{currentOperator}</span>
               </div>
             )}
 
-            {/* Switch operator */}
+            {/* Switch user */}
             <button
               onClick={() => {
                 localStorage.removeItem(LS.LAST_OPERATOR_SESSION)
                 window.location.reload()
               }}
-              className="text-xs text-muted hover:text-text px-2 py-1 rounded border border-transparent hover:border-border transition-all min-h-touch flex items-center"
+              className="text-xs text-muted hover:text-text px-2.5 py-1.5 rounded-lg border border-transparent hover:border-border hover:bg-surface transition-all min-h-touch flex items-center gap-1"
               title="Switch operator"
             >
-              ⇄ Switch
+              <span>⇄</span>
+              <span className="hidden sm:inline">Switch</span>
             </button>
 
-            {/* Settings */}
-            <NavLink to="/settings" className={({ isActive }) =>
-              `text-xs px-2.5 py-1 rounded-md transition-all min-h-touch flex items-center gap-1 ${
-                isActive
-                  ? 'bg-primary/10 text-primary font-bold'
-                  : 'text-muted hover:text-text hover:bg-bg'
-              }`
-            }>
-              ⚙ Settings
+            {/* Settings Link */}
+            <NavLink 
+              to="/settings" 
+              className={({ isActive }) =>
+                `text-xs px-3 py-1.5 rounded-xl transition-all min-h-touch flex items-center gap-1.5 font-semibold ${
+                  isActive
+                    ? 'bg-primary text-white shadow-xs'
+                    : 'text-muted hover:text-text hover:bg-surface border border-transparent hover:border-border'
+                }`
+              }
+            >
+              <span>⚙</span>
+              <span className="hidden sm:inline">Settings</span>
             </NavLink>
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex gap-1 overflow-x-auto -mb-px pt-1">
+        {/* Navigation Tabs */}
+        <nav className="flex gap-1.5 overflow-x-auto -mb-px pb-1 pt-0.5 scrollbar-none">
           {navItems.map(item => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.to === '/'}
               className={({ isActive }) => [
-                'px-3.5 py-2 text-sm font-body font-medium whitespace-nowrap border-b-2 transition-all',
+                'px-3.5 py-2 text-xs sm:text-sm font-body font-semibold whitespace-nowrap rounded-xl transition-all flex items-center gap-1.5',
                 isActive
-                  ? 'border-primary text-primary font-bold bg-primary/5 rounded-t-md'
-                  : 'border-transparent text-muted hover:text-text hover:border-border/80',
+                  ? 'bg-primary/10 text-primary border border-primary/20 shadow-2xs font-bold'
+                  : 'text-muted hover:text-text hover:bg-surface border border-transparent',
               ].join(' ')}
             >
-              {item.label}
+              <span className="text-xs">{item.icon}</span>
+              <span>{item.label}</span>
             </NavLink>
           ))}
         </nav>
@@ -113,3 +123,4 @@ export function NavBar() {
     </header>
   )
 }
+
