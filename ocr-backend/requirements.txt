@@ -1,0 +1,14 @@
+paddlepaddle==2.6.2
+paddleocr==2.9.1
+fastapi==0.111.0
+uvicorn==0.30.1
+python-multipart==0.0.9
+opencv-python-headless==4.9.0.80
+numpy==1.26.4
+pillow==10.3.0
+python-dotenv==1.0.1
+scikit-learn==1.7.2
+SQLAlchemy>=2.0.0
+alembic>=1.13.0
+passlib[bcrypt]>=1.7.4
+python-jose[cryptography]>=3.3.0
