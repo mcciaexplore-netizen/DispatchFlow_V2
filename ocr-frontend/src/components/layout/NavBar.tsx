@@ -63,14 +63,14 @@ export function NavBar() {
               </div>
             )}
 
-            {/* Switch user */}
+            {/* Log Out button */}
             <button
               onClick={handleSwitchAccount}
-              className="text-xs font-semibold text-muted hover:text-text px-3 py-1.5 rounded-xl border border-transparent hover:border-border hover:bg-surface transition-all min-h-touch flex items-center gap-1.5"
-              title="Switch operator / Log out"
+              className="text-xs font-bold text-danger bg-danger/10 hover:bg-danger hover:text-white px-3 py-1.5 rounded-xl border border-danger/20 transition-all min-h-touch flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              title="Log out of current account"
             >
-              <span className="text-sm">⇄</span>
-              <span className="hidden sm:inline">Sign Out</span>
+              <span>🚪</span>
+              <span>Log Out</span>
             </button>
 
             {/* Settings Link */}
